@@ -32,21 +32,21 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8kadani
+                        sudo mkdir s8kadani || true
                     """ 
                 }
             }
         }
-        // stage('Deploying the Code') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 pwd
-        //                 ls -l
-        //                 sudo cp -r * /var/www/html
-        //             """ 
-        //         }
-        //     }
-        // }
+        stage('Deploying the Code') {
+            steps {
+                script {
+                    sh """
+                        pwd
+                        ls -l
+                        sudo cp -r * /var/www/html/s8kadani
+                    """ 
+                }
+            }
+        }
     }
 }
