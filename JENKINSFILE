@@ -32,21 +32,21 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8moiseaf04
+                        sudo mkdir s8moiseaf04 || true
                     """ 
                 }
             }
         }
-        // stage('Deploying the Code') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 pwd
-        //                 ls -l
-        //                 sudo cp -r * /var/www/html
-        //             """ 
-        //         }
-        //     }
-        // }
+        stage('Deploying the Code') {
+            steps {
+                script {
+                    sh """
+                        pwd
+                        ls -l
+                        sudo cp -r * /var/www/html/s8moiseaf04/
+                    """ 
+                }
+            }
+        }
     }
 }
