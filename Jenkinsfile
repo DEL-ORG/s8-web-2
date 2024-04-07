@@ -33,21 +33,20 @@ pipeline {
                     sh """
                         cd /var/www/html
                         sudo mkdir s8tia || true
-                        sudo echo "THIS IS TIA LITTLE WEB" > /var/www/html/s8tia/index.html
                     """ 
                 }
             }
         }
-        // stage('Deploying the Code') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 pwd
-        //                 ls -l
-        //                 sudo cp -r * /var/www/html
-        //             """ 
-        //         }
-        //     }
-        // }
+        stage('Deploying the Code') {
+            steps {
+                script {
+                    sh """
+                        pwd
+                        ls -l
+                        sudo cp -r * /var/www/html/s8tia
+                    """ 
+                }
+            }
+        }
     }
 }
