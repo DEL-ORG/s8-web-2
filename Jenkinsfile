@@ -32,7 +32,8 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8tia
+                        sudo mkdir s8tia || true
+                        sudo echo "THIS IS TIA LITTLE WEB" > /var/www/html/s8tia/index.html
                     """ 
                 }
             }
