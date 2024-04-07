@@ -32,11 +32,22 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8victor
+                        sudo mkdir s8victor || true
+                    
                     """ 
                 }
             }
         }
+        stage('Deploying the code') {
+            steps {
+                script {
+                    sh """
+                        pwd
+                        ls -l
+                        sudo cp -r * /var/www/html/s8victor || true
+                    """ 
+                }
+            }
         // stage('Deploying the Code') {
         //     steps {
         //         script {
@@ -49,4 +60,5 @@ pipeline {
         //     }
         // }
     }
+}
 }
