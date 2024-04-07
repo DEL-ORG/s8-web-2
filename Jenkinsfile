@@ -32,21 +32,22 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8armand
+                        sudo mkdir s8armand || true
+                        echo "this is my first page from jenkins" >> sudo /var/www/html/s8armand/armand.txt || true
                     """ 
                 }
             }
         }
-        // stage('Deploying the Code') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 pwd
-        //                 ls -l
-        //                 sudo cp -r * /var/www/html
-        //             """ 
-        //         }
-        //     }
-        // }
+         stage('Deploying the Code') {
+            steps {
+                 script {
+                     sh """
+                         pwd
+                         ls -l
+                         sudo cp -r * /var/www/html/s8armand
+                     """ 
+                 }
+             }
+         }
     }
 }
