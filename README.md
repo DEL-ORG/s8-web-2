@@ -1,1 +1,3 @@
-# s8-web-2
+# Newsgrid
+
+A demo news website using CSS grid.
