@@ -33,6 +33,7 @@ pipeline {
                     sh """
                         cd /var/www/html
                         sudo mkdir s8-benjamin
+                        sudo echo "THIS IS S8-BENJAMIN LITLE WEB" > /var/www/html/s8-benjamin/index.html 
                     """ 
                 }
             }
