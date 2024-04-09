@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'SERVER04' }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8jenifferaf02' description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8jenifferaf02', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -9,7 +9,7 @@ pipeline {
                 script {
                     // Clone the repository using SSH with private key and checkout the specific branch
                     git credentialsId: 'jenkins-ssh-agents-private-key',
-                        url: git@github.com:DEL-ORG/s8-web-2.git,
+                        url:'git@github.com:DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
                 }
             }
@@ -33,6 +33,7 @@ pipeline {
                     sh """
                         cd /var/www/html
                         sudo mkdir s8jenifferaf02 || true
+                        echo "THIS IS MY FIRST JENKINS CLASS" > /var/www/html/s8jenifferaf02/index.html
                     """ 
                 }
             }
@@ -49,4 +50,3 @@ pipeline {
             }
         }
     }
-}
