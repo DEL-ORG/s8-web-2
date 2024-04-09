@@ -32,7 +32,8 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir a1fleur
+                        sudo mkdir a1fleur || true
+                        sudo echo "THIS IS FLEUR LITTLE WEB"  > /var/www/html/a1fleur/index.html
                     """ 
                 }
             }
