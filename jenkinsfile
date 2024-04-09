@@ -33,7 +33,7 @@ pipeline {
                     sh """
                         cd /var/www/html
                         sudo mkdir a1fleur || true
-                        sudo echo "THIS IS FLEUR LITTLE WEB"  > /var/www/html/a1fleur/index.html
+                        
                     """ 
                 }
             }
@@ -44,7 +44,7 @@ pipeline {
         //             sh """
         //                 pwd
         //                 ls -l
-        //                 sudo cp -r * /var/www/html
+        //                 sudo cp -r * /var/www/html/a1fleur
         //             """ 
         //         }
         //     }
