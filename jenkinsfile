@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sudo cp -r * /var/www/html/s8wanji3
+                        sudo cp -r * /var/www/html/
                     """ 
                 }
             }
