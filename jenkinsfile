@@ -18,8 +18,9 @@ pipeline {
         //     steps {
         //         script {
         //             sh """
-        //                 sudo apt update
-        //                 sudo apt install apache2 -y
+        //                 sudo apt-get update -y
+        //                 sudo apt-get upgrade -y
+        //                 sudo apt-get install apache2 -y
         //                 sudo systemctl start apache2
         //                 sudo systemctl status apache2
         //                 sudo systemctl enable apache2
