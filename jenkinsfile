@@ -27,12 +27,12 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Create a directory to deply the code ') {
+        stage('Create a dir to deploy the code') {
             steps {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8wanji3 || true
+                        sudo mkdir s8wanji || true
                     """ 
                 }
             }
@@ -41,7 +41,9 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sudo cp -r * /var/www/html/
+                        pwd
+                        ls -l
+                        sudo cp -r * /var/www/html/s8wanji
                     """ 
                 }
             }
