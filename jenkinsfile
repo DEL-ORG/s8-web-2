@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'SERVER04' }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8marjorie', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -32,7 +32,7 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8marjorie || true
+                        sudo mkdir s8tia || true
                     """ 
                 }
             }
@@ -43,7 +43,7 @@ pipeline {
                     sh """
                         pwd
                         ls -l
-                        sudo cp -r * /var/www/html/s8marjorie
+                        sudo cp -r * /var/www/html/s8tia
                     """ 
                 }
             }
