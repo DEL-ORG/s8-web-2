@@ -32,7 +32,7 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
-                        sudo mkdir s8chinedu || true
+                        sudo mkdir s8stephane || true
                     """ 
                 }
             }
