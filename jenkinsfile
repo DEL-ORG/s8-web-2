@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'SERVER04' }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8chinedu', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8steph', description: '')
     }
     stages {
         stage('Clone Repository') {
