@@ -32,11 +32,27 @@ pipeline {
                 script {
                     sh """
                         cd /var/www/html
+<<<<<<< HEAD
                         sudo mkdir s8mike         
+=======
+                        sudo mkdir s8mike || true
                     """ 
                 }
             }
         }
+        stage('Deploying the Code') {
+            steps {
+                script {
+                    sh """
+                        pwd
+                        ls -l
+                        sudo cp -r * /var/www/html/s8mike
+>>>>>>> a5533b77c92d79f90f6abeaacf94f47ced3b820d
+                    """ 
+                }
+            }
+        }
+<<<<<<< HEAD
         // stage('Deploying the Code') {
         //     steps {
         //         script {
@@ -50,3 +66,7 @@ pipeline {
         // }
     }
 }
+=======
+    }
+}
+>>>>>>> a5533b77c92d79f90f6abeaacf94f47ced3b820d
