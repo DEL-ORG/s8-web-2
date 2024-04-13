@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Friendship') {
+            steps {
+                echo 'Building a strong friendship...'
+                echo 'Communicating effectively'
+                echo 'Building trust and understanding'
+                echo 'Supporting each other'
+            }
+        }
+        stage('Marriage') {
+            steps {
+                echo 'Committing to a lifelong partnership...'
+                echo 'Planning for the future together'
+                echo 'Resolving conflicts peacefully'
+                echo 'Celebrating milestones together'
+            }
+        }
+        stage('Pregnancy') {
+            steps {
+                echo 'Preparing for the arrival of a new family member...'
+                echo 'Attending prenatal appointments'
+                echo 'Creating a supportive environment'
+                echo 'Planning for the baby's needs'
+            }
+        }
+        stage('Delivery') {
+            steps {
+                echo 'Welcoming the newest member of the family...'
+                echo 'Supporting the mother during labor'
+                echo 'Ensuring a safe and comfortable delivery environment'
+                echo 'Celebrating the arrival of the baby'
+                echo 'Naming the baby'
+            }
+        }
+    }
+}
