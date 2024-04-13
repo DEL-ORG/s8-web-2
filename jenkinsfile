@@ -43,7 +43,7 @@ pipeline {
                     sh """
                         pwd
                         ls -l
-                        sudo cp -r * /var/www/html/s8tia
+                        sudo cp -r * /var/www/html/s8stephane
                     """ 
                 }
             }
