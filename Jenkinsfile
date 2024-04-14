@@ -2,6 +2,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'IMAGE_NAME', defaultValue: '', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -13,11 +14,21 @@ pipeline {
                 }
             }
         }
-        stage('Create a dir to deploy the code') {
+        stage('Checking the code') {
             steps {
                 script {
                     sh """
                         ls -l
+                    """ 
+                }
+            }
+        }
+        stage('Building the dockerfile') {
+            steps {
+                script {
+                    sh """
+                        docker build -t ${params.IMAGE_NAME} .
+                        docker images |grep ${params.IMAGE_NAME}
                     """ 
                 }
             }
