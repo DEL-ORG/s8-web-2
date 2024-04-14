@@ -3,8 +3,8 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8armand2', description: '')
         string(name: 'IMAGE_NAME', defaultValue: 'armand', description: '')
-        string(name: 'CONTAINER_NAME', defaultValue: 'armand', description: '')
-        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '8', description: '')
+        string(name: 'CONTAINER_NAME', defaultValue: 'armando', description: '')
+        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '29', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
+                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME} || true
                         docker ps |grep ${params.CONTAINER_NAME}
                     """ 
                 }
