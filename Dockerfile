@@ -5,7 +5,7 @@ RUN apt install apache2 -y
 # RUN cd /var/www/html
 WORKDIR /var/www/html
 RUN rm -rf *
-COPY img /var/www/html
+COPY . .
 
 
 
