@@ -1,12 +1,7 @@
-FROM httpd
-LABEL maintainer="ektech"
-ARG port=80
-USER root
-RUN apt -y update 
-WORKDIR /usr/local/apache2/htdocs/
+FROM ubuntu
+RUN apt update
+RUN apt install apche2 -y
 
-RUN rm -rf *
-ADD ./code/* /usr/local/apache2/htdocs/
+WORKDIR /var/www/html
 
-ENTRYPOINT ["httpd-foreground"]
-EXPOSE ${port}
+#RUN cd/var/www/html
