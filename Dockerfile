@@ -3,9 +3,9 @@ RUN apt update
 RUN apt install apache2 -y
 
 # RUN cd /var/www/html
-WORKDIR /var/www/html
+WORKDIR /var/www/html/s8kevinaf02
 RUN rm -rf *
-COPY ./application-01 .
+COPY ./application-02 .
 
 # Expose port 80 to allow external access to the web server
 EXPOSE 80
