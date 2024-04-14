@@ -3,7 +3,7 @@ RUN apt update
 RUN apt install apache2 -y
 
 # RUN cd /var/www/html
-WORKDIR /var/www/html/s8kevinaf02
+WORKDIR /var/www/html
 RUN rm -rf *
 COPY ./application-02 .
 
