@@ -3,6 +3,8 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
         string(name: 'IMAGE_NAME', defaultValue: '', description: '')
+        string(name: 'CONTAINER_NAME', defaultValue: '', description: '')
+        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -29,6 +31,16 @@ pipeline {
                     sh """
                         docker build -t ${params.IMAGE_NAME} .
                         docker images |grep ${params.IMAGE_NAME}
+                    """ 
+                }
+            }
+        }
+        stage('Deploying the application') {
+            steps {
+                script {
+                    sh """
+                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
+                        docker ps |grep ${params.CONTAINER_NAME}
                     """ 
                 }
             }
