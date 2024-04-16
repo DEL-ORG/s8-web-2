@@ -3,7 +3,8 @@ RUN apt update
 RUN apt install apache2 -y
 
 # RUN cd /var/www/html
-# WORKDIR /var/www/html
-RUN mkdir s8jeniffer
+WORKDIR /var/www/html
+RUN rm -rf *
+COPY . .
 
 
