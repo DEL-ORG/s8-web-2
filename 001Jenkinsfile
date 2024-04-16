@@ -1,58 +1,52 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'built_image_name', defaultValue: 's8victor', description: 'Name for your built image')
-        string(name: 'image_name', defaultValue: 'httpd', description: 'Image you want to pull and build upon')
-        text(name: 'additional_content', defaultValue: 'write your RUN "commands"', description: 'Additional content to include in the Dockerfile')
-        string(name: 'container_name', defaultValue: 's8victor', description: 'name for your container to run on your built image')
+        string(name: 'BRANCH_NAME', defaultValue: 's8victor', description: '')
+        string(name: 'IMAGE_NAME', defaultValue: '', description: '')
+        string(name: 'CONTAINER_NAME', defaultValue: '', description: '')
+        string(name: 'PORT', defaultValue: '', description: '')
     }
     stages {
-        stage('Check servers and images') {
+        stage('Clone Repository') {
             steps {
-                script { 
+                script {
+                    // Clone the repository using SSH with private key and checkout the specific branch
+                    git credentialsId: 'jenkins-ssh-agents-private-key',
+                        url: 'git@github.com:DEL-ORG/s8-web-2.git',
+                        branch: "${params.BRANCH_NAME}"
+                }
+            }
+        }
+        stage('Checkout the code') {
+            steps {
+                script {
                     sh """
-                    docker ps 
-                    docker images
+                    ls -l
                     """
                 }
             }
         }
-
-        stage('Pull an image') {
-            steps {
-                script { 
-                    sh """
-                    docker pull ${params.image_name}
-                   # docker run -itd --name ${params.server_name} ${params.image_name} bash
-                    """
-                }
-            }
-        }
-
         stage('Build a Dockerfile') {
             steps {
                 script {
                     sh """
-cat << EOF > Dockerfile
-FROM ${params.image_name}
-
-${params.additional_content}
-EOF
+                    docker build -t ${params.IMAGE_NAME} -f 001.Dockerfile .
+                    docker images |grep ${params.IMAGE_NAME}
                     """
                 }
             }
         }
+        
 
-        stage('Build the image and start a container') {
+         stage('DEPLOYMENT') {
             steps {
-                script { 
+                script {
                     sh """
-                    docker build -t ${params.built_image_name} .
-                    docker images 
-                    docker run -itd --name ${params.container_name} ${params.built_image_name} bash
+                     docker run -itd -p ${params.PORT}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME} 
                     """
                 }
             }
         }
-    }
+        
+}
 }
