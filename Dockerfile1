@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y apache2
 WORKDIR /var/www/html/
 
 # Copy the HTML files from the application-01 directory into the working directory
-COPY application-01/index.html .
+COPY application-01/* .
 
 # Expose port 80 to the outside world
 EXPOSE 80
