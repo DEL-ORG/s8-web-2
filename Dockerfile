@@ -2,8 +2,9 @@ FROM ubuntu:latest
 RUN apt update
 RUN apt install apache2 -y
 WORKDIR /var/www/html
-RUN rm -rf *
-COPY ./application-01/ .
+RUN mkdir s8wanjii
+
+
 
 
 # Expose port 80 to allow external access to the web server
