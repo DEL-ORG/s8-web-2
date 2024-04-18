@@ -1,0 +1,20 @@
+# Use a Debian-based image with Apache HTTP Server
+FROM debian:buster-slim
+
+# Install Apache2 and its dependencies
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory to /var/www/html
+WORKDIR /var/www/html
+
+# Copy the HTML files into the Apache web server's root directory
+COPY . .
+
+# Expose port 80 to allow outside access to the web server
+EXPOSE 80
+
+# Start Apache in the foreground when the container starts
+CMD ["apache2ctl", "-D", "FOREGROUND"]
+
