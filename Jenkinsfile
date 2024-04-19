@@ -44,6 +44,7 @@ pipeline {
                         pwd
                         ls -l
                         sudo cp -r * /var/www/html/s8akpos
+                        ls -l
                     """ 
                 }
             }
