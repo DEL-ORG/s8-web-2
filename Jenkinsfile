@@ -25,25 +25,36 @@ pipeline {
                 }
             }
         }
-        stage('Building the dockerfile') {
+        stage('Building application 01') {
             steps {
                 script {
                     sh """
-                        docker build -t ${params.IMAGE_NAME} .
+                        docker build -t ${params.IMAGE_NAME}-application-01 .
                         docker images |grep ${params.IMAGE_NAME}
                     """ 
                 }
             }
         }
-        stage('Deploying the application') {
+        stage('Building application 02') {
             steps {
                 script {
                     sh """
-                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
-                        docker ps |grep ${params.CONTAINER_NAME}
+                        ls -l
+                        docker build -t ${params.IMAGE_NAME}-application-02 -f application-02.Dockerfile .
+                        docker images |grep ${params.IMAGE_NAME}
                     """ 
                 }
             }
         }
+        // stage('Deploying the application') {
+        //     steps {
+        //         script {
+        //             sh """
+        //                 docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
+        //                 docker ps |grep ${params.CONTAINER_NAME}
+        //             """ 
+        //         }
+        //     }
+        // }
     }
 }
