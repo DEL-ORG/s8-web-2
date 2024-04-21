@@ -1,12 +1,12 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_USERNAME="devopseasylearning"
+        DOCKER_HUB_USERNAME="omobaabiola"
         ALPHA_APPLICATION_01_REPO="alpha-application-01"
         ALPHA_APPLICATION_02_REPO="alpha-application-02"
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8abiola1', description: '')
         string(name: 'APP1_TAG', defaultValue: 'app1.1.1.0', description: '')
         string(name: 'APP2_TAG', defaultValue: 'app2.1.1.0', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
