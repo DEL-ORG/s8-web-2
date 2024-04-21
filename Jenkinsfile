@@ -6,7 +6,7 @@ pipeline {
         ALPHA_APPLICATION_02_REPO="alpha-application-02"
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8special', description: '')
         string(name: 'APP1_TAG', defaultValue: 'app1.1.1.0', description: '')
         string(name: 'APP2_TAG', defaultValue: 'app2.1.1.0', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
