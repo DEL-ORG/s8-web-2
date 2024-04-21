@@ -4,6 +4,7 @@ pipeline {
         DOCKER_HUB_USERNAME="devopseasylearning"
         ALPHA_APPLICATION_01_REPO="alpha-application-01"
         ALPHA_APPLICATION_02_REPO="alpha-application-02"
+        DOCKER_CREDENTIAL_ID = 'del-docker-hub-auth'
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
@@ -47,6 +48,58 @@ pipeline {
                         docker build -t "${env.DOCKER_HUB_USERNAME}"/"${env.ALPHA_APPLICATION_02_REPO}":"${params.APP2_TAG}" -f application-02.Dockerfile .
                         docker images |grep ${params.APP2_TAG}
                     """ 
+                }
+            }
+        }
+        stage('Login into') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIAL_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Use Docker CLI to login
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    }
+                }
+            }
+        }
+        stage('Pushing application 01 into DockerHub') {
+            steps {
+                script {
+                    sh """
+                        docker push ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_01_REPO}:${params.APP1_TAG}
+                    """
+                }
+            }
+        }
+        stage('Pushing application 02 into DockerHub') {
+            steps {
+                script {
+                    sh """
+                        docker push ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_02_REPO}:${params.APP2_TAG}
+                    """
+                }
+            }
+        }
+        stage('Login into s8marjorie DockerHub') {
+            steps {
+                script {
+                    sh """
+                        docker login -u thedevopslady -p dckr_pat_D_lEO8hxlSoof91Wn5BRnza2S8Q
+                    """
+                }
+            }
+        }
+        stage('Pushing into s8marjorie DockerHub') {
+            steps {
+                script {
+                    sh """
+                        docker tag devopseasylearning/alpha-application-01:app1.1.1.0 thedevopslady/alpha-application-01:app1.1.1.0
+
+                        docker tag devopseasylearning/alpha-application-02:app2.1.1.0 thedevopslady/alpha-application-02:app2.1.1.0
+
+                        docker push thedevopslady/alpha-application-01:app1.1.1.0
+                        docker push thedevopslady/alpha-application-02:app2.1.1.0
+                    """
                 }
             }
         }
