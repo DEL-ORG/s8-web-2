@@ -40,7 +40,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                       docker run -itd --name
+                       docker run -itd --name -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
+                       docker ps |grep ${params.CONTAINER_NAME}
                     """ 
                 }
             }
