@@ -15,7 +15,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    git credentialsId: 'jenkins-ssh-agents-private-key',
+                    git credentialsId: 'jenkins-agent-node',
                         url: 'git@github.com:DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
                 }
