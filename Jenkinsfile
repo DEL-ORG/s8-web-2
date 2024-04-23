@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${params.IMAGE_NAME}-application-02 -f application-02.Dockerfile .
+                        docker build -t ${params.IMAGE_NAME} .
                         docker images |grep ${params.IMAGE_NAME}
                     """ 
                 }
