@@ -1,9 +1,7 @@
 pipeline {
-    agent any
+    agent { label 'SERVER04' }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8wanji3', description: '')
-        string(name: 'IMAGE_NAME', defaultValue: '', description: '')
-       
     }
     stages {
         stage('Clone Repository') {
@@ -16,32 +14,39 @@ pipeline {
                 }
             }
         }
-        stage('Checking the code') {
-            steps {
-                script {
-                    sh """
-                       ls -l
-                    """ 
-                }
-            }
-        }
-        stage('Building the dockerfile') {
-            steps {
-                script {
-                    sh """
-                       docker build -t ${params.IMAGE_NAME} .
-                       docker images |grep ${params.IMAGE_NAME}
-                    """ 
-                }
-            }
-        }
-        // stage('Deploying the application') {
+        // stage('Install Apache') {
         //     steps {
         //         script {
         //             sh """
-        //                docker run -itd --name
-        //             """ 
+        //                 sudo apt update
+        //                 sudo apt install apache2 -y
+        //                 sudo systemctl start apache2
+        //                 sudo systemctl status apache2
+        //                 sudo systemctl enable apache2
+        //             """
+        //         }
         //     }
         // }
+        stage('Create a dir to deploy the code') {
+            steps {
+                script {
+                    sh """
+                        cd /var/www/html
+                        sudo mkdir s8wanjii || true
+                    """ 
+                }
+            }
+        }
+        stage('Deploying the Code') {
+            steps {
+                script {
+                    sh """
+                        pwd
+                        ls -l
+                        sudo cp -r * /var/www/html/s8wanjii
+                    """ 
+                }
+            }
+        }
     }
 }
