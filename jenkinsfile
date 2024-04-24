@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'SERVER 02'
+    }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8wanji3', description: '')
         string(name: 'IMAGE_NAME', defaultValue: '', description: '')
@@ -46,15 +48,15 @@ pipeline {
                 }
             }
         }
-        // stage('Deploying the application') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                docker run -itd --name -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
-        //                docker ps |grep ${params.CONTAINER_NAME}
-        //             """ 
-        //         }
-        //     }
-        // }
+        stage('Deploying the application') {
+            steps {
+                script {
+                    sh """
+                       docker run -itd --name -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
+                       docker ps |grep ${params.CONTAINER_NAME}
+                    """ 
+                }
+            }
+        }
     }
 }
