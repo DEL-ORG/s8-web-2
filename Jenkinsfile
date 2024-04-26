@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    enviroment{
+        docker_hub_username="devopseasylearning"
+    }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8kevin', description: '')
         string(name: 'IMAGE_NAME', defaultValue: '', description: '')
