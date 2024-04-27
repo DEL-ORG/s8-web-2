@@ -4,12 +4,12 @@ pipeline {
         DOCKER_HUB_USERNAME="devopseasylearning"
         ALPHA_APPLICATION_01_REPO="alpha-application-01"
         ALPHA_APPLICATION_02_REPO="alpha-application-02"
-        DOCKER_CREDENTIAL_ID = 'del-docker-hub-auth'
+        DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
-        string(name: 'APP1_TAG', defaultValue: 'app1.1.1.0', description: '')
-        string(name: 'APP2_TAG', defaultValue: 'app2.1.1.0', description: '')
+        string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
+        string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
@@ -45,6 +45,8 @@ pipeline {
             steps {
                 script {
                     sh """
+                        pwd
+                        ls -l
                         docker build -t "${env.DOCKER_HUB_USERNAME}"/"${env.ALPHA_APPLICATION_02_REPO}":"${params.APP2_TAG}" -f application-02.Dockerfile .
                         docker images |grep ${params.APP2_TAG}
                     """ 
@@ -55,7 +57,9 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIAL_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: "s8-test-docker-hub-auth", 
+                    usernameVariable: 'DOCKER_USERNAME', 
+                    passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Use Docker CLI to login
                         sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                     }
@@ -80,38 +84,38 @@ pipeline {
                 }
             }
         }
-        stage('Login into s8marjorie DockerHub') {
-            steps {
-                script {
-                    sh """
-                        docker login -u thedevopslady -p dckr_pat_D_lEO8hxlSoof91Wn5BRnza2S8Q
-                    """
-                }
-            }
-        }
-        stage('Pushing into s8marjorie DockerHub') {
-            steps {
-                script {
-                    sh """
-                        docker tag devopseasylearning/alpha-application-01:app1.1.1.0 thedevopslady/alpha-application-01:app1.1.1.0
-
-                        docker tag devopseasylearning/alpha-application-02:app2.1.1.0 thedevopslady/alpha-application-02:app2.1.1.0
-
-                        docker push thedevopslady/alpha-application-01:app1.1.1.0
-                        docker push thedevopslady/alpha-application-02:app2.1.1.0
-                    """
-                }
-            }
-        }
-        // stage('Deploying the application') {
+        // stage('Login into s8marjorie DockerHub') {
         //     steps {
         //         script {
         //             sh """
-        //                 docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}-application-02
-        //                 docker ps |grep ${params.CONTAINER_NAME}
-        //             """ 
+        //                 docker login -u thedevopslady -p dckr_pat_D_lEO8hxlSoof91Wn5BRnza2S8Q
+        //             """
         //         }
         //     }
         // }
+        // stage('Pushing into s8marjorie DockerHub') {
+        //     steps {
+        //         script {
+        //             sh """
+        //                 docker tag devopseasylearning/alpha-application-01:app1.1.1.0 thedevopslady/alpha-application-01:app1.1.1.0
+
+        //                 docker tag devopseasylearning/alpha-application-02:app2.1.1.0 thedevopslady/alpha-application-02:app2.1.1.0
+
+        //                 docker push thedevopslady/alpha-application-01:app1.1.1.0
+        //                 docker push thedevopslady/alpha-application-02:app2.1.1.0
+        //             """
+        //         }
+        //     }
+        // }
+        stage('Deploying the application') {
+            steps {
+                script {
+                    sh """
+                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}-application-02
+                        docker ps |grep ${params.CONTAINER_NAME}
+                    """ 
+                }
+            }
+        }
     }
 }
