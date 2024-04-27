@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8lagataf02', description: '')
         string(name: 'IMAGE_NAME', defaultValue: '', description: '')
         string(name: 'CONTAINER_NAME', defaultValue: '', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
