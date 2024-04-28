@@ -29,11 +29,17 @@ pipeline {
         stage('Testing the trigger') {
             steps {
                 script {
-                    sh """
-                        ls -l
-                    """
+                    customFunction()
                 }
             }
         }
     }
+}
+
+def customFunction() {
+    sh """
+        ls -l
+        pwd
+        uptime
+    """
 }
