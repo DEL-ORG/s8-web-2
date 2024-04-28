@@ -26,5 +26,14 @@ pipeline {
                 }
             }
         }
+        stage('Testing the trigger') {
+            steps {
+                script {
+                    sh """
+                        ls -l
+                    """
+                }
+            }
+        }
     }
 }
