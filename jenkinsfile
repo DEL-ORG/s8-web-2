@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'SERVER04' }
+    agent any
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8danny', description: '')
     }
@@ -27,26 +27,15 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Create a dir to deploy the code') {
+        stage('Checking the code') {
             steps {
                 script {
                     sh """
-                        cd /var/www/html
-                        sudo mkdir s8danny || true
-                    """ 
-                }
-            }
-        }
-        stage('Deploying the Code') {
-            steps {
-                script {
-                    sh """
-                        pwd
                         ls -l
-                        sudo cp -r * /var/www/html/s8tia
                     """ 
                 }
             }
         }
+        
     }
 }
