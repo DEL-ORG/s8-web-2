@@ -1,3 +1,11 @@
+def customFunction() {
+    sh """
+        ls -l
+        pwd
+        uptime
+    """
+}
+
 pipeline {
     agent any
     
@@ -43,10 +51,3 @@ pipeline {
     }
 }
 
-def customFunction() {
-    sh """
-        ls -l
-        pwd
-        uptime
-    """
-}
