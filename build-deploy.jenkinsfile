@@ -1,13 +1,13 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_USERNAME="devopseasylearning"
+        DOCKER_HUB_USERNAME="s8kevinaf02"
         ALPHA_APPLICATION_01_REPO="alpha-application-01"
         ALPHA_APPLICATION_02_REPO="alpha-application-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8kevinaf02', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST_APP_1', defaultValue: '3381', description: '')
