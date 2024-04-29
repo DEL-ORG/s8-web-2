@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     git credentialsId: 'jenkins-ssh-agents-private-key',
-                        url: 'github.com/CollinsLagat1901/s8lagat.git',
+                        url: 'git@github.com:DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
                 }
             }
