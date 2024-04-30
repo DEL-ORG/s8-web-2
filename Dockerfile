@@ -1,12 +1,16 @@
-FROM httpd
-LABEL maintainer="ektech"
-ARG port=80
-USER root
-RUN apt -y update 
-WORKDIR /usr/local/apache2/htdocs/
+# Use Ubuntu base image
+FROM ubuntu:latest
 
-RUN rm -rf *
-ADD ./code/* /usr/local/apache2/htdocs/
+# Update package lists and install Apache
+RUN apt-get update && apt-get install -y apache2
 
-ENTRYPOINT ["httpd-foreground"]
-EXPOSE ${port}
+# Set the working directory inside the container
+WORKDIR /var/www/html/
+
+# Copy the HTML files from the application-01 directory into the working directory
+COPY . .
+# Expose port 80 to the outside world
+EXPOSE 80
+
+# Start Apache when the container starts
+CMD ["apache2ctl", "-D", "FOREGROUND"]
