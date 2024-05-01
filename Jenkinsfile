@@ -108,15 +108,15 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Deploying the application') {
-            steps {
-                script {
-                    sh """
-                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}-application-02
-                        docker ps |grep ${params.CONTAINER_NAME}
-                    """ 
-                }
-            }
-        }
+        // stage('Deploying the application') {
+        //     steps {
+        //         script {
+        //             sh """
+        //                 docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}-application-02
+        //                 docker ps |grep ${params.CONTAINER_NAME}
+        //             """ 
+        //         }
+        //     }
+        // }
     }
 }
