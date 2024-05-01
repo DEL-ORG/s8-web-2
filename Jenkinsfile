@@ -58,7 +58,7 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: "docker-hub-credentials", 
+                    withCredentials([usernamePassword(credentialsId: "s8-test-docker-hub-auth", 
                     usernameVariable: 'DOCKER_USERNAME', 
                     passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Use Docker CLI to login
