@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_USERNAME="s8kevinaf02"
-        ALPHA_APPLICATION_01_REPO="alpha-application-01"
-        ALPHA_APPLICATION_02_REPO="alpha-application-02"
+        DOCKER_HUB_USERNAME="devopseasylearning"
+        ALPHA_APPLICATION_01_REPO="alpha-01"
+        ALPHA_APPLICATION_02_REPO="alpha-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {

@@ -1,0 +1,53 @@
+def customFunction() {
+    sh """
+        ls -l
+        pwd
+        uptime
+    """
+}
+
+pipeline {
+    agent any
+    
+    triggers {
+        githubPush()
+    }
+    environment {
+        DOCKER_HUB_USERNAME="devopseasylearning"
+        ALPHA_APPLICATION_01_REPO="alpha-01"
+        ALPHA_APPLICATION_02_REPO="alpha-02"
+        DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
+    }
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 's8kevinaf02', description: '')
+        string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
+        string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
+        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    git credentialsId: 'jenkins-ssh-agents-private-key',
+                        url: 'git@github.com:DEL-ORG/s8-web-2.git',
+                        branch: "${params.BRANCH_NAME}"
+                }
+            }
+        }
+        stage('Testing the trigger1') {
+            steps {
+                script {
+                    customFunction()
+                }
+            }
+        }
+        stage('Testing the trigger2') {
+            steps {
+                script {
+                    customFunction()
+                }
+            }
+        }
+    }
+}
+
