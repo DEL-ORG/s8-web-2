@@ -2,6 +2,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8danny', description: '')
+        string(name: 'IMAGE_NAME', defaultValue: '', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -14,24 +15,21 @@ pipeline {
                 }
             }
         }
-        // stage('Install Apache') {
-        //     steps {
-        //         script {
-        //             sh """
-        //                 sudo apt update
-        //                 sudo apt install apache2 -y
-        //                 sudo systemctl start apache2
-        //                 sudo systemctl status apache2
-        //                 sudo systemctl enable apache2
-        //             """
-        //         }
-        //     }
-        // }
         stage('Checking the code') {
             steps {
                 script {
                     sh """
                         ls -l
+                    """ 
+                }
+            }
+        }
+        stage('building the dockerfile') {
+            steps {
+                script {
+                    sh """
+                        docker build -t ${params.IMAGE_NAME} .
+                        docker images |grep ${params.IMAGE_NAME}
                     """ 
                 }
             }
