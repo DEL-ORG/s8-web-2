@@ -7,10 +7,11 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 'del-docker-hub-auth'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8marjorie', description: '')
         string(name: 'APP1_TAG', defaultValue: 'app1.1.1.0', description: '')
         string(name: 'APP2_TAG', defaultValue: 'app2.1.1.0', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
+        string(name: 'PUSH_USER_NAME', defaultValue: 's8mike', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -80,25 +81,25 @@ pipeline {
                 }
             }
         }
-        stage('Login into s8marjorie DockerHub') {
+        stage('Login into s8mike DockerHub') {
             steps {
                 script {
                     sh """
-                        docker login -u thedevopslady -p dckr_pat_D_lEO8hxlSoof91Wn5BRnza2S8Q
+                        docker login -u s8mike -p dckr_pat_wlcMY9nOyXFSI3R11E2Hs99IsJo
                     """
                 }
             }
         }
-        stage('Pushing into s8marjorie DockerHub') {
+        stage('Pushing into s8mike DockerHub') {
             steps {
                 script {
                     sh """
-                        docker tag devopseasylearning/alpha-application-01:app1.1.1.0 thedevopslady/alpha-application-01:app1.1.1.0
+                        docker tag ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_01_REPO}:${params.APP1_TAG} ${params.PUSH_USER_NAME}/${env.ALPHA_APPLICATION_01_REPO}:${params.APP1_TAG}
 
-                        docker tag devopseasylearning/alpha-application-02:app2.1.1.0 thedevopslady/alpha-application-02:app2.1.1.0
+                        docker tag ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_02_REPO}:${params.APP2_TAG} ${params.PUSH_USER_NAME}/${env.ALPHA_APPLICATION_02_REPO}:${params.APP2_TAG}
 
-                        docker push thedevopslady/alpha-application-01:app1.1.1.0
-                        docker push thedevopslady/alpha-application-02:app2.1.1.0
+                        docker push ${params.PUSH_USER_NAME}/${env.ALPHA_APPLICATION_01_REPO}:${params.APP1_TAG}
+                        docker push ${params.PUSH_USER_NAME}/${env.ALPHA_APPLICATION_02_REPO}:${params.APP2_TAG}
                     """
                 }
             }
