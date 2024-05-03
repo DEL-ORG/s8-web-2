@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8giang', description: '')
         string(name: 'IMAGE_NAME', defaultValue: '', description: '')
     }
     stages {
