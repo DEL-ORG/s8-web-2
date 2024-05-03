@@ -29,9 +29,16 @@ pipeline {
                     sh """
                         docker build -t ${params.IMAGE_NAME}:my_ubuntu .
                         docker images | grep ${params.IMAGE_NAME}
+
+                        pwd
+                        docker run -it ubuntu:my_ubuntu bash
+                        echo "in container"
+                        pwd
                     """ 
                 }
             }
         }
+
+        
     }
 }
