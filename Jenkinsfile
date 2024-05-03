@@ -31,7 +31,7 @@ pipeline {
                         docker images | grep ${params.IMAGE_NAME}
 
                         pwd
-                        docker run -it ubuntu:my_ubuntu bash
+                        docker run ubuntu:my_ubuntu bash
                         echo "in container"
                         pwd
                     """ 
