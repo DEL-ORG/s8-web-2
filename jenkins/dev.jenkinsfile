@@ -10,7 +10,7 @@ pipeline {
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
         skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
-        // retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
+        retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
         // quietPeriod(5) // Sets a quiet period before starting a build after a new commit is pushed
     }
     environment {
@@ -26,12 +26,21 @@ pipeline {
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
-        stage('Clone Repository') {
+        stage('Clone Repository1') {
             steps {
                 script {
                     git credentialsId: 'jenkins-ssh-agents-private-key',
                         url: 'git@github.com:DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
+                }
+            }
+        }
+        stage('Clone Repository2') {
+            steps {
+                script {
+                    git credentialsId: 'jenkins-ssh-agents-private-key',
+                        url: 'git@github.com:DEL-ORG/revive-fritz2.git',
+                        branch: "main"
                 }
             }
         }
