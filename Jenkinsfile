@@ -2,8 +2,8 @@ pipeline {
     agent any
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8giang_app', description: '')
-        string(name: 'IMAGE_NAME', defaultValue: 'deploy_website', description: '')
-        string(name: 'CONTAINER_NAME', defaultValue: 'deploy_website', description: '')
+        string(name: 'IMAGE_NAME', defaultValue: 's8giang_deploy_website', description: '')
+        string(name: 'CONTAINER_NAME', defaultValue: 's8giang_deploy_website', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
