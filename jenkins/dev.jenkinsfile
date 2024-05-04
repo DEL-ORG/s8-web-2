@@ -52,7 +52,7 @@ pipeline {
         stage('Test timeout') {
             steps {
                 script {
-                    sleep 2
+                    sleep 120s
                 }
             }
         }
