@@ -1,9 +1,9 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
-        string(name: 'IMAGE_NAME', defaultValue: '', description: '')
-        string(name: 'CONTAINER_NAME', defaultValue: '', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8giang_app', description: '')
+        string(name: 'IMAGE_NAME', defaultValue: 'deploy_website', description: '')
+        string(name: 'CONTAINER_NAME', defaultValue: 'deploy_website', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
@@ -30,7 +30,7 @@ pipeline {
                 script {
                     sh """
                         docker build -t ${params.IMAGE_NAME} .
-                        docker images |grep ${params.IMAGE_NAME}
+                        docker images | grep ${params.IMAGE_NAME}
                     """ 
                 }
             }
@@ -39,8 +39,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
-                        docker ps |grep ${params.CONTAINER_NAME}
+                        docker run -d -p ${params.PORT_ON_DOCKER_HOST}:80 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}
+                        docker ps | grep ${params.CONTAINER_NAME}
                     """ 
                 }
             }
