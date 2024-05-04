@@ -61,6 +61,21 @@ pipeline {
                 }
             }
         }
+        stage('Building Application 02') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 's8tia'
+                }
+            }
+            steps {
+                script {
+                    sh """
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
+                        docker images
+                    """
+                }
+            }
+        }
             
         stage('Test timeout') {
             steps {
