@@ -46,41 +46,41 @@ pipeline {
                 }
             }
         }
-        stage('Building Application 01') {
-            when {
-                expression {
-                    params.BRANCH_NAME == 's8tia'
-                }
-            }
-            steps {
-                script {
-                    sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
-                        docker images
-                    """
-                }
-            }
-        }
-        stage('Building Application 02') {
-            when {
-                expression {
-                    params.BRANCH_NAME == 's8tia'
-                }
-            }
-            steps {
-                script {
-                    sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
-                        docker images
-                    """
-                }
-            }
-        }
+        // stage('Building Application 01') {
+        //     when {
+        //         expression {
+        //             params.BRANCH_NAME == 's8tia'
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             sh """
+        //                 docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
+        //                 docker images
+        //             """
+        //         }
+        //     }
+        // }
+        // stage('Building Application 02') {
+        //     when {
+        //         expression {
+        //             params.BRANCH_NAME == 's8tia'
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             sh """
+        //                 docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
+        //                 docker images
+        //             """
+        //         }
+        //     }
+        // }
         stage('Login into') {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: ${env.DOCKER_CREDENTIAL_ID}, 
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", 
                     usernameVariable: 'DOCKER_USERNAME', 
                     passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Use Docker CLI to login
