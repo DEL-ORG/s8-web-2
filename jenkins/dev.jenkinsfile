@@ -35,7 +35,7 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 'develop'
+                    params.BRANCH_NAME == 's8tia'
                 }
             }
             steps {
@@ -49,7 +49,7 @@ pipeline {
         stage('Building Application 01') {
             when {
                 expression {
-                    params.BRANCH_NAME == 'develop'
+                    params.BRANCH_NAME == 's8tia'
                 }
             }
             steps {
