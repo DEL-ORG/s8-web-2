@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    environment{
+        DOCKER_HUB_USERNAME= "devopseasylearning"
+        APP1_REPOSITORY = "alpha_application_01"
+        APP2_REPOSITORY = "alpha_application_02"
+
+    }
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 's8victor', description: '')
+        string(name: 'APP1_TAG', defaultValue: '', description: '')
+        string(name: 'APP2_TAG', defaultValue: '', description: '')
+
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    // Clone the repository using SSH with private key and checkout the specific branch
+                    git credentialsId: 'jenkins-ssh-agents-private-key',
+                        url: 'git@github.com:DEL-ORG/s8-web-2.git',
+                        branch: "${params.BRANCH_NAME}"
+                }
+            }
+        }
+        stage('Checkout the code') {
+            steps {
+                script {
+                    sh """
+                    ls -l
+                    """
+                }
+            }
+        }
+        stage('Build the Dockerfile') {
+            steps {
+                            script {
+                sh """
+                docker build -t ${env.DOCKER_HUB_USERNAME}/${env.APP1_REPOSITORY}:${params.APP1_TAG} -f application-01.Dockerfile .
+                docker build -t ${env.DOCKER_HUB_USERNAME}/${env.APP2_REPOSITORY}:${params.APP2_TAG} -f application-02.Dockerfile .
+
+                docker images | grep ${params.APP1_TAG}
+                docker images | grep ${params.APP2_TAG}
+                """
+            }
+            }
+        }
+        
+
+         stage('PUSHING TO DOCKER HUB') {
+            steps {
+                script {
+                    sh """
+                     docker push ${env.DOCKER_HUB_USERNAME}/${env. APP1_REPOSITORY}: ${params.APP1_TAG}
+                     docker push ${env.DOCKER_HUB_USERNAME}/${env. APP2_REPOSITORY}: ${params.APP2_TAG}
+                    """
+                }
+            }
+        }
+        
+}
+}
