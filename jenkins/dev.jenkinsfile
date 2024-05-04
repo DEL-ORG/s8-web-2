@@ -26,21 +26,12 @@ pipeline {
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
-        stage('Clone Repository1') {
+        stage('Clone Repository') {
             steps {
                 script {
                     git credentialsId: 'jenkins-ssh-agents-private-key',
                         url: 'git@github.com:DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
-                }
-            }
-        }
-        stage('Clone Repository2') {
-            steps {
-                script {
-                    git credentialsId: 'jenkins-ssh-agents-private-key',
-                        url: 'git@github.com:DEL-ORG/revive-fritz2.git',
-                        branch: "main"
                 }
             }
         }
@@ -61,7 +52,7 @@ pipeline {
         stage('Test timeout') {
             steps {
                 script {
-                    sleep 60
+                    sleep 1
                 }
             }
         }
@@ -70,7 +61,7 @@ pipeline {
 
 def customFunction() {
     sh """
-        ls -l
+        lsgthgt -l
         pwd
         uptime
     """
