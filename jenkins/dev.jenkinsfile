@@ -5,8 +5,8 @@ pipeline {
         githubPush()
     }
     options {
-        timeout(time: 1, unit: 'MINUTES') // Timeout for the entire pipeline
-        buildDiscarder(logRotator(numToKeepStr: '5')) // Discard old builds to save disk space
+        timeout(time: 10, unit: 'MINUTES') // Timeout for the entire pipeline
+        buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
         // disableConcurrentBuilds() // Ensures that only one build can run at a time
         // timestamps() // Adds timestamps to the console output
         // skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
@@ -52,7 +52,7 @@ pipeline {
         stage('Test timeout') {
             steps {
                 script {
-                    sleep 1
+                    sleep 60
                 }
             }
         }
