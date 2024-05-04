@@ -67,7 +67,7 @@ pipeline {
 
 def customFunction() {
     sh """
-        lsgthgt -l
+        ls -l
         pwd
         uptime
     """
