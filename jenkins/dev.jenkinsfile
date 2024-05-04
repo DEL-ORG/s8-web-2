@@ -33,6 +33,11 @@ pipeline {
             }
         }
         stage('Clone Repository') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 'develop'
+                }
+            }
             steps {
                 script {
                     git credentialsId: 'jenkins-ssh-agents-private-key',
@@ -42,6 +47,11 @@ pipeline {
             }
         }
         stage('Building Application 01') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 'develop'
+                }
+            }
             steps {
                 script {
                     sh """
