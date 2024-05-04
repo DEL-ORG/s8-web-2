@@ -2,7 +2,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8giang', description: '')
-        string(name: 'IMAGE_NAME', defaultValue: '', description: '')
+        string(name: 'IMAGE_NAME', defaultValue: 'ubuntu', description: '')
     }
     stages {
         stage('Clone Repository') {
@@ -27,13 +27,12 @@ pipeline {
             steps {
                 script {
                     sh """
+                        pwd
+                        ls -a
                         docker build -t ${params.IMAGE_NAME}:my_ubuntu .
                         docker images | grep ${params.IMAGE_NAME}
-
-                        pwd
-                        docker run ubuntu:my_ubuntu bash
-                        echo "in container"
-                        pwd
+                        echo "The following is in container"
+                        docker run ${params.IMAGE_NAME}:my_ubuntu bash -c 'pwd; ls -a'
                     """ 
                 }
             }
