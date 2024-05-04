@@ -19,7 +19,7 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: '', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
@@ -41,20 +41,17 @@ pipeline {
                 }
             }
         }
-        stage('Testing the trigger1') {
+        stage('Building Application 01') {
             steps {
                 script {
-                    customFunction()
+                    sh """
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
+                        docker images
+                    """
                 }
             }
         }
-        stage('Testing the trigger2') {
-            steps {
-                script {
-                    customFunction()
-                }
-            }
-        }
+            
         stage('Test timeout') {
             steps {
                 script {
@@ -80,3 +77,28 @@ def sanity_check() {
        sh 'exit 2'
    } 
 }
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('Displaying Environment Variables') {
+            steps {
+                echo "The build number is: ${BUILD_NUMBER}"
+                echo "The job name is: ${JOB_NAME}"
+                echo "The Jenkins home directory is: ${JENKINS_HOME}"
+                echo "The Jenkins URL is: ${JENKINS_URL}"
+                echo "The build URL is: ${BUILD_URL}"
+                echo "The job URL is: ${JOB_URL}"
+                echo "The workspace is: ${WORKSPACE}" 
+                echo "BUILD_DISPLAY_NAME: ${BUILD_DISPLAY_NAME}" 
+                // echo "BUILD_TIMESTAMP: ${BUILD_TIMESTAMP}" 
+                echo "JOB_DISPLAY_URL: ${JOB_DISPLAY_URL}" 
+                echo "BUILD_URL_ANCHOR: ${BUILD_URL}/console"  
+                echo "WORKSPACE: ${WORKSPACE}"  
+            }
+        }
+    }
+}
+
