@@ -107,6 +107,7 @@ pipeline {
                     sh """
                         docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
                         docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
+                        docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
                     """
                 }
             }
