@@ -8,6 +8,7 @@ pipeline {
     //     skipDefaultCheckout() // Skip the default checkout step, useful if you want to manually manage the repository checkout
     //     quietPeriod(5) // Set a quiet period of 5 seconds before starting a build after a new commit is detected
     //     retry(3) // Retry the entire pipeline up to 3 times if it fails
+    buildDiscarder(logRotator(numToKeepStr: '5'))//discard old builds to save disk space
     }
 
     triggers {
@@ -41,7 +42,7 @@ pipeline {
         stage('Test Timeout') {
             steps {
                 script {
-                    sleep 120
+                    sleep 5
                 }
             }
         }
