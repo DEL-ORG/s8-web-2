@@ -68,6 +68,7 @@ pipeline {
                                     ls -l 
                                     pwd
                                     sonar-scanner -v
+                                    sonar-scanner
                                 """
                             }
                         }
