@@ -46,6 +46,18 @@ pipeline {
                 }
             }
         }
+        stage('Building Sonar Image') {
+            steps {
+                script {
+                    dir("{$WORKSPACE}/sonar-scanner") {
+                        sh """
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
+                        docker images
+                        """
+                    }
+                }
+            }
+        }
         stage('Building Application 01') {
             when {
                 expression {
