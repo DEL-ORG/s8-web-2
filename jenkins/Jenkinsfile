@@ -1,21 +1,33 @@
 pipeline {
     agent any
 
-    triggers{
+    options {
+    //     buildDiscarder(logRotator(numToKeepStr: '10')) // Keep only the last 10 build logs
+         timeout(time: 1, unit: 'HOURS') // Set a timeout of 1 hour for the entire pipeline
+    //     disableConcurrentBuilds() // Disable concurrent builds of this pipeline
+    //     skipDefaultCheckout() // Skip the default checkout step, useful if you want to manually manage the repository checkout
+    //     quietPeriod(5) // Set a quiet period of 5 seconds before starting a build after a new commit is detected
+    //     retry(3) // Retry the entire pipeline up to 3 times if it fails
+    }
+
+    triggers {
         githubPush()
     }
+
     environment {
         DOCKER_HUB_USERNAME="devopseasylearning"
         ALPHA_APPLICATION_01_REPO="alpha-application-01"
         ALPHA_APPLICATION_02_REPO="alpha-application-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
+
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8lagataf02', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
+
     stages {
         stage('Clone Repository') {
             steps {
@@ -26,6 +38,12 @@ pipeline {
                 }
             }
         }
-
+        stage('Test Timeout') {
+            steps {
+                script {
+                    sleep 120
+                }
+            }
+        }
     }
 }
