@@ -48,12 +48,12 @@ pipeline {
                 }
             }
         }
-    stage('Testing the trigger3') {
+        stage('Testing the trigger3') {
             steps {
                 script {
                     customFunction()
                 }
             }
         }
+    }
 }
-
