@@ -1,15 +1,17 @@
+
+
 pipeline {
     agent any
 
-    enviroment {
+    environment {
         // DOCKER_HUB_USERNAME = "ericyan23"
         // DOCKER_HUB_PASSWD = "dckr_pat_2YYct3sQSHTBtwykEvl1ZghtkxU"
 
-        DOCKER_HUB_USERNAME = "devopseasylearning"
-        DOCKER_HUB_CREDENTIAL_ID = "del-docker-hub-auth"
+        DOCKER_HUB_USERNAME="devopseasylearning"
+        DOCKER_HUB_CREDENTIAL_ID="del-docker-hub-auth"
 
-        APP_01_REPO = "s8giang-application-01"
-        APP_02_REPO = "s8giang-application-02"
+        APP_01_REPO="s8giang-application-01"
+        APP_02_REPO="s8giang-application-02"
     }
 
     options {
@@ -25,15 +27,16 @@ pipeline {
     }
 
     stages {
+
         stage('Clone Repository and check') {
             steps {
-                script {
+                script { 
                     git credentialsId: 'jenkins-ssh-agents-private-key',
                         url: 'git@github.com:DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
                 }
 
-                script {
+                script { // check files 
                     sh """
                         ls -l
                     """ 
@@ -44,40 +47,35 @@ pipeline {
 
         stage('Building application 01 and 02') {
             steps {
-                script { // set up image names 
-                    sh """
-                        IMAGE_NAME_app01 = ${env.DOCKER_HUB_USERNAME}/${env.APP_01_REPO}:${params.APP1_TAG}
-                        IMAGE_NAME_app02 = ${env.DOCKER_HUB_USERNAME}/${env.APP_02_REPO}:${params.APP2_TAG}
-                    """
-                }
-
-
                 script { // build images and check
-                    sh """
-                        docker build -t ${IMAGE_NAME_app01} -f Dockerfile_app01 . || true   
-                        docker build -t ${IMAGE_NAME_app02} -f Dockerfile_app02 . || true
+                    sh """ 
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/${env.APP_01_REPO}:${params.APP1_TAG} -f Dockerfile_app01 .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/${env.APP_02_REPO}:${params.APP2_TAG} -f Dockerfile_app02 .
 
-                        docker images | grep ${IMAGE_NAME_app01}
-                        docker images | grep ${IMAGE_NAME_app02}
+                        docker images
                     """ 
                 }
             }
         }
         
+
         stage('log into docker hub and push') {
             steps {
+
                 script { // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIAL_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWD')]) {
-                        // In this step, we extract "DOCKER_HUB_USERNAME" and "DOCKER_HUB_PASSWD" from docker hub credential "DOCKER_CREDENTIAL_ID"
+                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIAL_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWD')]) {
+                        // In this step, we extract "DOCKER_HUB_USERNAME" and "DOCKER_HUB_PASSWD" from docker hub credential "DOCKER_HUB_CREDENTIAL_ID"
                         // Use Docker CLI to login
-                        sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWD"
+                        sh """
+                            docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWD
+                        """
                     }
                 }
 
                 script { // push to Docker hub
                     sh """
-                        docker push $IMAGE_NAME_app01
-                        docker push $IMAGE_NAME_app02
+                        docker push ${env.DOCKER_HUB_USERNAME}/${env.APP_01_REPO}:${params.APP1_TAG}
+                        docker push ${env.DOCKER_HUB_USERNAME}/${env.APP_02_REPO}:${params.APP2_TAG}
                     """
 
                 }
@@ -85,7 +83,7 @@ pipeline {
         }        
     }
 
-    // -----------------  connect to slack to get notification that the pipeline runs successfully or not ---------------------------
+    -----------------  connect to slack to get notification that the pipeline runs successfully or not ---------------------------
     post {
         success {
             slackSend color: '#2EB67D',
