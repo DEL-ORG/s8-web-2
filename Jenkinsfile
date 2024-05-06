@@ -83,7 +83,7 @@ pipeline {
         }        
     }
 
-    -----------------  connect to slack to get notification that the pipeline runs successfully or not ---------------------------
+    // -----------------  connect to slack to get notification that the pipeline runs successfully or not ---------------------------
     post {
         success {
             slackSend color: '#2EB67D',
