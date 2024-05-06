@@ -18,7 +18,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8giang_app', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8giang_app_push', description: '')
         string(name: 'APP1_TAG', defaultValue: 'app1.1.1.0', description: '')
         string(name: 'APP2_TAG', defaultValue: 'app2.1.1.0', description: '')
         // string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
