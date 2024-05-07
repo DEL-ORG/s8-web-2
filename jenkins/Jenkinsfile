@@ -112,7 +112,7 @@ pipeline {
 
 def customFunction() {
     sh """
-        lsfvjadsvf -l
+        ls -l
         pwd
         uptime
     """
