@@ -2,10 +2,10 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_USERNAME="devopseasylearning"
+        DOCKER_HUB_USERNAME="s8kevinaf02"
         ALPHA_APPLICATION_01_REPO="alpha-01"
         ALPHA_APPLICATION_02_REPO="alpha-02"
-        DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
+        DOCKER_CREDENTIAL_ID = 's8kevinaf02-dockerhub-token'
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8kevinaf02', description: '')
@@ -58,7 +58,7 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: "s8-test-docker-hub-auth", 
+                    withCredentials([usernamePassword(credentialsId: "s8kevinaf02-dockerhub-token", 
                     usernameVariable: 'DOCKER_USERNAME', 
                     passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Use Docker CLI to login

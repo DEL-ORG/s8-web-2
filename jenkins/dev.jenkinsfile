@@ -1,30 +1,9 @@
-<<<<<<< HEAD
-def customFunction() {
-    sh """
-        ls -l
-        pwd
-        uptime
-    """
-}
-
-=======
->>>>>>> 530096a06e2befa4780663afffa5a99d4d6f3b29
 pipeline {
     agent any
     
     triggers {
         githubPush()
     }
-<<<<<<< HEAD
-    environment {
-        DOCKER_HUB_USERNAME="devopseasylearning"
-        ALPHA_APPLICATION_01_REPO="alpha-01"
-        ALPHA_APPLICATION_02_REPO="alpha-02"
-        DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
-    }
-    parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8kevinaf02', description: '')
-=======
     options {
         timeout(time: 1, unit: 'MINUTES') // Timeout for the entire pipeline
         buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
@@ -34,22 +13,18 @@ pipeline {
         retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
     }
     environment {
-        DOCKER_HUB_USERNAME="devopseasylearning"
-        ALPHA_APPLICATION_01_REPO="alpha-application-01"
-        ALPHA_APPLICATION_02_REPO="alpha-application-02"
-        DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
+        DOCKER_HUB_USERNAME="s8kevinaf02"
+        ALPHA_APPLICATION_01_REPO="app-01-1"
+        ALPHA_APPLICATION_02_REPO="app-02-2"
+        DOCKER_CREDENTIAL_ID = 's8kevinaf02-dockerhub-token'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8corneille', description: '')
->>>>>>> 530096a06e2befa4780663afffa5a99d4d6f3b29
+        string(name: 'BRANCH_NAME', defaultValue: 's8kevinaf02', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
-<<<<<<< HEAD
-        stage('Clone Repository') {
-=======
         stage ('Check Allow Users') {
             steps {
                 script {
@@ -57,7 +32,7 @@ pipeline {
                         def build_id = env.BUILD_USER_ID
                         def build_user = env.BUILD_USER
                         echo "build_id : $build_id"
-                        if (build_id in ['corneillechahoua', 'admin']) {
+                        if (build_id in ['s8kevinaf02', 'admin']) {
                             echo "Hi $build_user, You are allowed to run this job"
                         } else {
                             error "Hi $build_user, You are not allowed to run this job"
@@ -76,10 +51,9 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8kevinaf02'
                 }
             }
->>>>>>> 530096a06e2befa4780663afffa5a99d4d6f3b29
             steps {
                 script {
                     git credentialsId: 'jenkins-ssh-agents-private-key',
@@ -88,19 +62,6 @@ pipeline {
                 }
             }
         }
-<<<<<<< HEAD
-        stage('Testing the trigger1') {
-            steps {
-                script {
-                    customFunction()
-                }
-            }
-        }
-        stage('Testing the trigger2') {
-            steps {
-                script {
-                    customFunction()
-=======
         stage('Building Sonar Image') {
             steps {
                 script {
@@ -113,28 +74,28 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube analysis') {
-            steps {
-                script {
-                    dir("${WORKSPACE}") {
-                        docker.image("devopseasylearning/s8-sonar-scanner:latest").inside('-u 0:0') {
-                            withSonarQubeEnv('SonarScanner') {
-                                sh """
-                                    ls -l 
-                                    pwd
-                                    sonar-scanner -v
-                                    sonar-scanner
-                                """
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // stage('SonarQube analysis') {
+        //     steps {
+        //         script {
+        //             dir("${WORKSPACE}") {
+        //                 docker.image("devopseasylearning/s8-sonar-scanner:latest").inside('-u 0:0') {
+        //                     withSonarQubeEnv('SonarScanner') {
+        //                         sh """
+        //                             ls -l 
+        //                             pwd
+        //                             sonar-scanner -v
+        //                             sonar-scanner
+        //                         """
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Building Application 01') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8kevinaf02'
                 }
             }
             steps {
@@ -149,7 +110,7 @@ pipeline {
         stage('Building Application 02') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8kevinaf02'
                 }
             }
             steps {
@@ -190,15 +151,12 @@ pipeline {
             steps {
                 script {
                     sleep 1
->>>>>>> 530096a06e2befa4780663afffa5a99d4d6f3b29
                 }
             }
         }
     }
 }
 
-<<<<<<< HEAD
-=======
 def customFunction() {
     sh """
         ls -l
@@ -214,4 +172,3 @@ def sanity_check() {
        sh 'exit 2'
    } 
 }
->>>>>>> 530096a06e2befa4780663afffa5a99d4d6f3b29
