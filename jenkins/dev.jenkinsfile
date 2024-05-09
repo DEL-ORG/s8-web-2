@@ -163,8 +163,8 @@ pipeline {
             sh "docker stop app-02 || true"
             sh "docker rm app-02 || true"
             // Run new containers using the latest images
-            sh "docker run -d --name ludi-app-01 -p 8080:8080 ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
-            sh "docker run -d --name ludi-app-02 -p 8081:8081 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+            sh "docker run -d --name ludi-app-01 -p 7898:80 ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
+            sh "docker run -d --name ludi-app-02 -p 7899:8081 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
                 }
             }
         }
