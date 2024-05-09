@@ -5,7 +5,7 @@ pipeline {
         githubPush()
     }
     options {
-        timeout(time: 1, unit: 'MINUTES') // Timeout for the entire pipeline
+        timeout(time: 10, unit: 'MINUTES') // Timeout for the entire pipeline
         buildDiscarder(logRotator(numToKeepStr: '3')) // Discard old builds to save disk space
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
@@ -14,8 +14,8 @@ pipeline {
     }
     environment {
         DOCKER_HUB_USERNAME="devopseasylearning"
-        ALPHA_APPLICATION_01_REPO="alpha-application-01"
-        ALPHA_APPLICATION_02_REPO="alpha-application-02"
+        ALPHA_APPLICATION_01_REPO="s5ludivine-application-01"
+        ALPHA_APPLICATION_02_REPO="s5ludivine-application-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
@@ -101,7 +101,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi -f application-01.Dockerfile .
                         docker images
                     """
                 }
@@ -116,7 +116,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi -f application-02.Dockerfile .
                         docker images
                     """
                 }
@@ -139,15 +139,36 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
-                        docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi
                         docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
                     """
                 }
             }
         }
-            
-        stage('Test timeout') {
+        stage('Deployment') {
+            when {
+               expression {
+            params.BRANCH_NAME == 's8elisa'
+               }
+            }
+            steps {
+               script {
+            // Pull the latest version of your Docker images from Docker Hub
+            sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
+            sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+            // Stop and remove existing containers (if any)
+            sh "docker stop app-01 || true"
+            sh "docker rm app-01 || true"
+            sh "docker stop app-02 || true"
+            sh "docker rm app-02 || true"
+            // Run new containers using the latest images
+            sh "docker run -d --name ludi-app-01 -p 8080:8080 ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
+            sh "docker run -d --name ludi-app-02 -p 8081:8081 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+                }
+            }
+        }
+         stage('Test timeout') {
             steps {
                 script {
                     sleep 1
