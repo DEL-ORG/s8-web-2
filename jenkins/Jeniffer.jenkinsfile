@@ -19,7 +19,9 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-<<<<<<< HEAD:jenkins/Jeniffer.jenkinsfile
+<<<
+
+<<<< HEAD:jenkins/Jeniffer.jenkinsfile
         string(name: 'BRANCH_NAME', defaultValue: 's8jeniffer2', description: '')
 =======
         string(name: 'BRANCH_NAME', defaultValue: 's8corneille', description: '')
