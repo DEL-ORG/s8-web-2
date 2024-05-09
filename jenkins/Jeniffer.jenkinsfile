@@ -19,13 +19,7 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-<<<
-
-<<<< HEAD:jenkins/Jeniffer.jenkinsfile
         string(name: 'BRANCH_NAME', defaultValue: 's8jeniffer2', description: '')
-=======
-        string(name: 'BRANCH_NAME', defaultValue: 's8corneille', description: '')
->>>>>>> 530096a06e2befa4780663afffa5a99d4d6f3b29:jenkins/dev.jenkinsfile
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
@@ -38,7 +32,7 @@ pipeline {
                         def build_id = env.BUILD_USER_ID
                         def build_user = env.BUILD_USER
                         echo "build_id : $build_id"
-                        if (build_id in ['corneillechahoua', 'admin']) {
+                        if (build_id in ['s8jenifferaf02', 'admin']) {
                             echo "Hi $build_user, You are allowed to run this job"
                         } else {
                             error "Hi $build_user, You are not allowed to run this job"
@@ -57,7 +51,7 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8jeniffer2'
                 }
             }
             steps {
@@ -101,7 +95,7 @@ pipeline {
         stage('Building Application 01') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8jeniffer2'
                 }
             }
             steps {
@@ -116,7 +110,7 @@ pipeline {
         stage('Building Application 02') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8corneille'
+                    params.BRANCH_NAME == 's8jeniffer2'
                 }
             }
             steps {
@@ -160,17 +154,8 @@ pipeline {
                 }
             }
         }
-        stage('Testing the trigger3') {
-            steps {
-                script {
-                    customFunction()
-                }
-            }
-        }
     }
 }
-<<<<<<< HEAD:jenkins/Jeniffer.jenkinsfile
-=======
 
 def customFunction() {
     sh """
@@ -187,4 +172,3 @@ def sanity_check() {
        sh 'exit 2'
    } 
 }
->>>>>>> 530096a06e2befa4780663afffa5a99d4d6f3b29:jenkins/dev.jenkinsfile
