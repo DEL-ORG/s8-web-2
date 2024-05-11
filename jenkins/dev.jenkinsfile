@@ -5,7 +5,11 @@ pipeline {
         githubPush()
     }
     options {
+<<<<<<< HEAD
         timeout(time: 1, unit: 'MINUTES') // Timeout for the entire pipeline
+=======
+        timeout(time: 10, unit: 'MINUTES') // Timeout for the entire pipeline
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
         buildDiscarder(logRotator(numToKeepStr: '7')) // Discard old builds to save disk space
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
@@ -19,12 +23,17 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
+<<<<<<< HEAD
         string(name: 'BRANCH_NAME', defaultValue: 's8corneille', description: '')
+=======
+        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
+<<<<<<< HEAD
         stage ('Check Allow Users') {
             steps {
                 script {
@@ -41,6 +50,8 @@ pipeline {
                 }
             }
         }
+=======
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
         stage('Sanity Check') {
             steps {
                 script {
@@ -51,7 +62,11 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
+<<<<<<< HEAD
                     params.BRANCH_NAME == 's8corneille'
+=======
+                    params.BRANCH_NAME == 's8tia'
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
                 }
             }
             steps {
@@ -65,7 +80,11 @@ pipeline {
         stage('Building Sonar Image') {
             steps {
                 script {
+<<<<<<< HEAD
                     dir("${WORKSPACE}/sonar-scanner") {
+=======
+                    dir("{$WORKSPACE}/sonar-scanner") {
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
                         sh """
                         docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
                         docker images
@@ -74,6 +93,7 @@ pipeline {
                 }
             }
         }
+<<<<<<< HEAD
         stage('SonarQube analysis') {
             steps {
                 script {
@@ -96,6 +116,12 @@ pipeline {
             when {
                 expression {
                     params.BRANCH_NAME == 's8corneille'
+=======
+        stage('Building Application 01') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 's8tia'
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
                 }
             }
             steps {
@@ -110,7 +136,11 @@ pipeline {
         stage('Building Application 02') {
             when {
                 expression {
+<<<<<<< HEAD
                     params.BRANCH_NAME == 's8corneille'
+=======
+                    params.BRANCH_NAME == 's8tia'
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
                 }
             }
             steps {
@@ -141,7 +171,10 @@ pipeline {
                     sh """
                         docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
                         docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
+<<<<<<< HEAD
                         docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
+=======
+>>>>>>> 12bde1f40e44bf35259c25ea72ffe08081b01a0d
                     """
                 }
             }
