@@ -25,11 +25,11 @@ pipeline {
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
-        when {
-                expression {
-                    params.BRANCH_NAME == 'dev'
-                }
-            }
+        // when {
+        //         expression {
+        //             params.BRANCH_NAME == 'dev'
+        //         }
+        //     }
         // stage ('Check Allow Users') {
         //     steps {
         //         script {
