@@ -167,10 +167,29 @@ pipeline {
                 }
             }
         } 
-        stage('Test timeout') {
+        stage('Updating the compose file') {
             steps {
                 script {
-                    sleep 1
+                    dir("${WORKSPACE}/docker-compose") {
+                        sh """
+                        sed -i "s|APP_1_IMAGE_TAG|${params.APP1_TAG}|g" docker-compose.yml
+                        sed -i "s|APP_2_IMAGE_TAG|${params.APP2_TAG}|g" docker-compose.yml
+                        cat docker-compose.yml
+                        """
+                    }
+                }
+            }
+        }
+        stage('Deploying the application') {
+            steps {
+                script {
+                    dir("${WORKSPACE}/docker-compose") {
+                        sh """
+                        docker-compose up -d
+                        sleep 10
+                        docker ps |grep -i app
+                        """
+                    }
                 }
             }
         }

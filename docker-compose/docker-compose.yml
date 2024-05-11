@@ -2,7 +2,7 @@ version: '3'
 
 services:
   application01:
-    image: devopseasylearning/app-01:latest
+    image: devopseasylearning/app-01:APP_1_IMAGE_TAG
     ports:
       - "3381:80" # Adjust port as needed
     restart: always
@@ -10,7 +10,7 @@ services:
       - s8-session # Change this to your desired network name
 
   application02:
-    image: devopseasylearning/app-02:latest
+    image: devopseasylearning/app-02:APP_2_IMAGE_TAG
     ports:
       - "3382:80" # Adjust port as needed
     restart: always
