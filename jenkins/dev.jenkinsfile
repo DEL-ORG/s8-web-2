@@ -10,7 +10,7 @@ pipeline {
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
         skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
-        retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
+        // retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
     }
     environment {
         DOCKER_HUB_USERNAME="devopseasylearning"
@@ -121,7 +121,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${params.APP1_TAG} -f application-01.Dockerfile .
                         docker images
                     """
                 }
@@ -136,7 +136,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${params.APP2_TAG} -f application-02.Dockerfile .
                         docker images
                     """
                 }
