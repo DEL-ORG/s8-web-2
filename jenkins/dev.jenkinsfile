@@ -19,12 +19,17 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 'dev', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
+        when {
+                expression {
+                    params.BRANCH_NAME == 'dev'
+                }
+            }
         stage ('Check Allow Users') {
             steps {
                 script {
@@ -42,6 +47,11 @@ pipeline {
             }
         }
         stage('Sanity Check') {
+             when {
+                expression {
+                    params.BRANCH_NAME == 'dev'
+                }
+            }
             steps {
                 script {
                     sanity_check()
@@ -63,6 +73,11 @@ pipeline {
             }
         }
         stage('Building Sonar Image') {
+             when {
+                expression {
+                    params.BRANCH_NAME == 'dev'
+                }
+            }
             steps {
                 script {
                     dir("${WORKSPACE}/sonar-scanner") {
@@ -75,6 +90,11 @@ pipeline {
             }
         }
         stage('SonarQube analysis') {
+             when {
+                expression {
+                    params.BRANCH_NAME == 'dev'
+                }
+            }
             steps {
                 script {
                     dir("${WORKSPACE}") {
@@ -93,9 +113,9 @@ pipeline {
             }
         }
         stage('Building Application 01') {
-            when {
+             when {
                 expression {
-                    params.BRANCH_NAME == 's8tia'
+                    params.BRANCH_NAME == 'dev'
                 }
             }
             steps {
@@ -108,9 +128,9 @@ pipeline {
             }
         }
         stage('Building Application 02') {
-            when {
+             when {
                 expression {
-                    params.BRANCH_NAME == 's8tia'
+                    params.BRANCH_NAME == 'dev'
                 }
             }
             steps {
@@ -136,6 +156,11 @@ pipeline {
             }
         }
         stage('Pushing into Docker Hub') {
+             when {
+                expression {
+                    params.BRANCH_NAME == 'dev'
+                }
+            }
             steps {
                 script {
                     sh """
@@ -145,8 +170,7 @@ pipeline {
                     """
                 }
             }
-        }
-            
+        } 
         stage('Test timeout') {
             steps {
                 script {
