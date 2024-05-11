@@ -19,7 +19,7 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 's8lagataf02', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
@@ -35,7 +35,7 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8tia'
+                    params.BRANCH_NAME == 's8lagataf02'
                 }
             }
             steps {
@@ -61,7 +61,7 @@ pipeline {
         stage('Building Application 01') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8tia'
+                    params.BRANCH_NAME == 's8lagataf02'
                 }
             }
             steps {
@@ -76,7 +76,7 @@ pipeline {
         stage('Building Application 02') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8tia'
+                    params.BRANCH_NAME == 's8lagataf02'
                 }
             }
             steps {
