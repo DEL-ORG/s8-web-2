@@ -51,8 +51,7 @@ pipeline {
                 script {
                     dir("{$WORKSPACE}/sonar-scanner") {
                         sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/
-                        s8-sonar-scanner:latest  .
+                        docker build -t devopseasylearning/s8-sonar-scanner:latest .
                         docker images
                         """
                     }
