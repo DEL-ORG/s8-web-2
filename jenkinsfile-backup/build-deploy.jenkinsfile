@@ -2,12 +2,12 @@ pipeline {
     agent any
     environment {
         DOCKER_HUB_USERNAME="devopseasylearning"
-        ALPHA_APPLICATION_01_REPO="alpha-application-01"
-        ALPHA_APPLICATION_02_REPO="alpha-application-02"
-        DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
+        ALPHA_APPLICATION_01_REPO="dannie-alpha-application-1"
+        ALPHA_APPLICATION_02_REPO="dannie-alpha-application-2"
+        DOCKER_CREDENTIAL_ID = 'del-docker-credentiel'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST_APP_1', defaultValue: '3381', description: '')
@@ -17,8 +17,8 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    git credentialsId: 'jenkins-ssh-agents-private-key',
-                        url: 'git@github.com:DEL-ORG/s8-web-2.git',
+                    git credentialsId: 'my-git-credentiel',
+                        url: 'https://github.com/DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
                 }
             }
@@ -58,7 +58,7 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: "s8-test-docker-hub-auth", 
+                    withCredentials([usernamePassword(credentialsId: "del-docker-credentiel", 
                     usernameVariable: 'DOCKER_USERNAME', 
                     passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Use Docker CLI to login
@@ -111,38 +111,38 @@ pipeline {
 }
 
 
-pipeline {
-    agent {
-        label "master"
-    }
-    stages {
-        stage('Displaying Environment Variables') {
-            steps {
-                echo "The build number is: ${BUILD_NUMBER}"
-                echo "The job name is: ${JOB_NAME}"
-                echo "The Jenkins home directory is: ${JENKINS_HOME}"
-                echo "The Jenkins URL is: ${JENKINS_URL}"
-                echo "The build URL is: ${BUILD_URL}"
-                echo "The job URL is: ${JOB_URL}"
-                echo "The workspace is: ${WORKSPACE}" 
-                echo "BUILD_DISPLAY_NAME: ${BUILD_DISPLAY_NAME}" 
-                // echo "BUILD_TIMESTAMP: ${BUILD_TIMESTAMP}" 
-                echo "JOB_DISPLAY_URL: ${JOB_DISPLAY_URL}" 
-                echo "BUILD_URL_ANCHOR: ${BUILD_URL}/console"  
-                echo "WORKSPACE: ${WORKSPACE}"  
-            }
-        }
-    }
-}
+// pipeline {
+//     agent {
+//         label "master"
+//     }
+//     stages {
+//         stage('Displaying Environment Variables') {
+//             steps {
+//                 echo "The build number is: ${BUILD_NUMBER}"
+//                 echo "The job name is: ${JOB_NAME}"
+//                 echo "The Jenkins home directory is: ${JENKINS_HOME}"
+//                 echo "The Jenkins URL is: ${JENKINS_URL}"
+//                 echo "The build URL is: ${BUILD_URL}"
+//                 echo "The job URL is: ${JOB_URL}"
+//                 echo "The workspace is: ${WORKSPACE}" 
+//                 echo "BUILD_DISPLAY_NAME: ${BUILD_DISPLAY_NAME}" 
+//                 // echo "BUILD_TIMESTAMP: ${BUILD_TIMESTAMP}" 
+//                 echo "JOB_DISPLAY_URL: ${JOB_DISPLAY_URL}" 
+//                 echo "BUILD_URL_ANCHOR: ${BUILD_URL}/console"  
+//                 echo "WORKSPACE: ${WORKSPACE}"  
+//             }
+//         }
+//     }
+// }
+// 
 
-
-pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                sh "printenv"
-            }
-        }
-    }
-}
+// pipeline {
+//     agent any
+//     stages {
+//         stage('Build') {
+//             steps {
+//                 sh "printenv"
+//             }
+//         }
+//     }
+// }
