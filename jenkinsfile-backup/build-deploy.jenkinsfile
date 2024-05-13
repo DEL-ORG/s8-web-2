@@ -7,7 +7,7 @@ pipeline {
         DOCKER_CREDENTIAL_ID = 'del-docker-credentiel'
     }
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: '')
+        string(name: 'BRANCH_NAME', defaultValue: 'a1danniella', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST_APP_1', defaultValue: '3381', description: '')
