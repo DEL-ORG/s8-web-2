@@ -14,15 +14,10 @@ pipeline {
     }
     environment {
         DOCKER_HUB_USERNAME="devopseasylearning"
-        ALPHA_APPLICATION_01_REPO="alpha-application-01"
-        ALPHA_APPLICATION_02_REPO="alpha-application-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8tia', description: '')
-        string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
-        string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
-        string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
         stage('Sanity Check') {
