@@ -49,7 +49,7 @@ pipeline {
         stage('Sanity Check') {
              when {
                 expression {
-                    params.BRANCH_NAME == 'dev'
+                    params.BRANCH_NAME == 'dev2'
                 }
             }
             steps {
@@ -61,7 +61,7 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 'dev'
+                    params.BRANCH_NAME == 'dev2'
                 }
             }
             steps {
@@ -75,7 +75,7 @@ pipeline {
         stage('Building Sonar Image') {
              when {
                 expression {
-                    params.BRANCH_NAME == 'dev'
+                    params.BRANCH_NAME == 'dev2'
                 }
             }
             steps {
@@ -92,7 +92,7 @@ pipeline {
         stage('SonarQube analysis') {
              when {
                 expression {
-                    params.BRANCH_NAME == 'dev'
+                    params.BRANCH_NAME == 'dev2'
                 }
             }
             steps {
@@ -115,7 +115,7 @@ pipeline {
         stage('Building Application 01') {
              when {
                 expression {
-                    params.BRANCH_NAME == 'dev'
+                    params.BRANCH_NAME == 'dev2'
                 }
             }
             steps {
@@ -130,7 +130,7 @@ pipeline {
         stage('Building Application 02') {
              when {
                 expression {
-                    params.BRANCH_NAME == 'dev'
+                    params.BRANCH_NAME == 'dev2'
                 }
             }
             steps {
