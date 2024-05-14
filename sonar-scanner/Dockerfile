@@ -26,4 +26,3 @@ RUN sonar-scanner -v
 WORKDIR /app
 
 
-# https://chat.openai.com/c/8e7c24da-0fff-4e07-b834-79535b5e80e3

@@ -49,9 +49,12 @@ pipeline {
         stage('Building Sonar Image') {
             steps {
                 script {
-                    dir("${WORKSPACE}/sonar-scanner") {
+                    dir("${env.WORKSPACE}/sonar-scanner") {  // Changes the current directory to `${WORKSPACE}/sonar-scanner`
+                        // WORKSPACE is the Jenkins environment variable, it refers to the current directory
+                        // docker file is stored in ./sonar-scanner, that is why we Changes the current directory to `${WORKSPACE}/sonar-scanner`
+                        // for docker build *** .
                         sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest .    
                         docker images
                         """
                     }
