@@ -46,18 +46,8 @@ pipeline {
                 }
             }
         }
-        stage('Building Sonar Image') {
-            steps {
-                script {
-                    dir("${WORKSPACE}/sonar-scanner") {
-                        sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
-                        docker images
-                        """
-                    }
-                }
-            }
-        }
+         
+        // after we push SonarQube to Docker hub, we apply SonarQube analysis
         stage('SonarQube analysis') {
             steps {
                 script {
@@ -76,78 +66,11 @@ pipeline {
                 }
             }
         }
-        stage('Building Application 01') {
-            when {
-                expression {
-                    params.BRANCH_NAME == 's8tia'
-                }
-            }
-            steps {
-                script {
-                    sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
-                        docker images
-                    """
-                }
-            }
-        }
-        stage('Building Application 02') {
-            when {
-                expression {
-                    params.BRANCH_NAME == 's8tia'
-                }
-            }
-            steps {
-                script {
-                    sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
-                        docker images
-                    """
-                }
-            }
-        }
-        stage('Login into') {
-            steps {
-                script {
-                    // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", 
-                    usernameVariable: 'DOCKER_USERNAME', 
-                    passwordVariable: 'DOCKER_PASSWORD')]) {
-                        // Use Docker CLI to login
-                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                    }
-                }
-            }
-        }
-        stage('Pushing into Docker Hub') {
-            steps {
-                script {
-                    sh """
-                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
-                        docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
-                        docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
-                    """
-                }
-            }
-        }
-            
-        stage('Test timeout') {
-            steps {
-                script {
-                    sleep 1
-                }
-            }
-        }
+        
+        
     }
 }
 
-def customFunction() {
-    sh """
-        ls -l
-        pwd
-        uptime
-    """
-}
 
 
 def sanity_check() {
