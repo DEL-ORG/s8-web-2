@@ -5,10 +5,16 @@ pipeline {
         string(name: 'DOCKERFILE' , defaultValue: 'Dockerfile', description: 'my dockerfile name')
         string(name: 'IMAGE_NAME', defaultValue: 'my-application-image' , description: 'my image name')
         string(name: 'PORT_MAPPING', defaultValue: '3131:80', description: 'my port maping')
+        booleanParam(name: 'CLONE_REPOSITORY', defaultValue: true, description: 'Whether to clone the repository')
+        booleanParam(name: 'Build_Docker_Image', defaultValue: true, description: 'Whether to build my docker image')
+        booleanParam(name: 'Run_Docker_Container', defaultValue: true, description: 'Whether to run my docker image')
     }
     
     stages {
         stage('Clone Repository') {
+            when {
+                expression { params.CLONE_REPOSITORY == true }
+            }
             steps {
                 script {
                     git credentialsId: 'jenkins-ssh-agents-private-key', url: 'git@github.com:DEL-ORG/s8-web-2.git', branch: 'royce'
@@ -17,12 +23,18 @@ pipeline {
         }
         
         stage('Build Docker Image') {
+            when {
+                expression { params.Build_Docker_Image == true }
+            }
             steps {
                 sh "docker build -t ${params.IMAGE_NAME} ."
             }
         }
         
         stage('Run Docker Container') {
+            when {
+                expression { params.Run_Docker_Container == true }
+            }
             steps {
                 sh "docker run -d -p ${params.PORT_MAPPING} ${params.IMAGE_NAME}"
             }
