@@ -1,0 +1,40 @@
+pipeline {
+    agent { label 'SERVER03' }
+    
+    parameters {
+        string{ name: 'DOCKERFILE' , default value: 'application-01.Dockerfile', description: 'my dockerfile name' }
+        string{ name: 'IMAGE_NAME', default value: 'my-application-image' , description: 'my image name' }
+        string{ name: 'PORT_MAPPING', default value: '3131:80', description: 'my port maping' }
+    }
+    
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    git credentialsId: 'jenkins-ssh-agents-private-key', url: 'git@github.com:DEL-ORG/s8-web-2.git', branch: 'royce'
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t $params.{IMAGE_NAME} -f $params.{DOCKERFILE} ."
+            }
+        }
+        
+        stage('Run Docker Container') {
+            steps {
+                sh "docker run -d -p $params.{PORT_MAPPING} $params.{IMAGE_NAME}"
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up Docker resources
+            sh "docker stop \$(docker ps -q --filter ancestor=$params.{IMAGE_NAME})"
+            sh "docker rm \$(docker ps -aq --filter ancestor=$params.{IMAGE_NAME})"
+            sh "docker rmi $params.{IMAGE_NAME}"
+        }
+    }
+}
