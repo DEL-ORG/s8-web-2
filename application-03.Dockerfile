@@ -70,9 +70,6 @@ RUN sonar_scanner_version="5.0.1.3006" && \
 RUN update-alternatives --set editor /usr/bin/vim.basic && \
     update-alternatives --set vi /usr/bin/vim.basic
 
-# Install Azure CLI
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
