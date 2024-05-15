@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label "SERVER03"
+    }
     
     triggers {
         githubPush()
@@ -23,6 +25,9 @@ pipeline {
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
+        booleanParam(name: 'RUN_STAGES', defaultValue: false, description: 'Run stages')
+        booleanParam(name: 'DELETE_APPLICATION', defaultValue: false, description: 'Delete Application')
+        booleanParam(name: 'SKIP_STAGES', defaultValue: false, description: 'Skip stages building and pushing image')
     }
     stages {
         // stage ('Check Allow Users') {
@@ -51,7 +56,9 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                    params.BRANCH_NAME == 's8elisa'
+                expression { params.RUN_STAGES }
+
+                params.BRANCH_NAME == 's8elisa'
                 }
             }
             steps {
@@ -94,6 +101,8 @@ pipeline {
         }
         stage('Building Application 01') {
             when {
+                expression { params.RUN_STAGES }
+
                 expression {
                     params.BRANCH_NAME == 's8elisa'
                 }
@@ -122,6 +131,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Building Application 03') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 's8elisa'
+                }
+            }
+            steps {
+                script {
+                    sh """
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-03:${BUILD_NUMBER}_ludi -f application-03.Dockerfile .
+                        docker images
+                    """
+                }
+            }
+        } 
         stage('Login into') {
             steps {
                 script {
@@ -158,17 +183,19 @@ pipeline {
             sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
             sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
             // Stop and remove existing containers (if any)
-            sh "docker stop app-01 || true"
-            sh "docker rm app-01 || true"
-            sh "docker stop app-02 || true"
-            sh "docker rm app-02 || true"
+            // sh "docker stop app-01 || true"
+            // sh "docker rm app-01 || true"
+            // sh "docker stop app-02 || true"
+            // sh "docker rm app-02 || true"
             // Run new containers using the latest images
-            sh "docker run -d --name ludi-app-01 -p 7898:80 ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
-            sh "docker run -d --name ludi-app-02 -p 7899:8081 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+            sh "docker run -itd --name ludi-test001 -p 7896:80 ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
+            sh "docker run -itd --name ludi-test002 -p 7897:80 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+            sh "docker ps  |grep ludi-test1"
+             sh "docker ps  |grep ludi-test2"
                 }
             }
         }
-         stage('Test timeout') {
+        stage('Test timeout') {
             steps {
                 script {
                     sleep 1
