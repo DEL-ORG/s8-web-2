@@ -103,11 +103,7 @@ pipeline {
             steps {
                // dir("${WORKSPACE}")
                 script {
-                    sh """
-                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST_APP_1}:80  ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_01_REPO}:${params.APP1_TAG}
-                        sleep 1
-                        docker ps 
-                    """ 
+                    customFunction()
                 }
             }
         }
@@ -125,7 +121,13 @@ pipeline {
     }
 }
 
-
+def customFunction() {
+    sh """
+         docker run -itd -p ${params.PORT_ON_DOCKER_HOST_APP_1}:80  ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_01_REPO}:${params.APP1_TAG}
+         sleep 1
+         docker ps 
+    """  
+}
 
 // pipeline {
 //     agent {
