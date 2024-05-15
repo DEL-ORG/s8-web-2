@@ -37,6 +37,15 @@ pipeline {
                 }
             }
         }
+
+        stage('sanity check') {
+            steps {
+                script {
+                    sanity_check()
+                }
+            }
+        }
+
         stage('Checking the code') {
             steps {
                 script {
@@ -110,11 +119,7 @@ pipeline {
         stage('Deploying the application 02') {
             steps {
                 script {
-                    sh """
-                        docker run -itd -p ${params.PORT_ON_DOCKER_HOST_APP_2}:80  ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_02_REPO}:${params.APP2_TAG}
-                        sleep 5
-                        docker ps 
-                    """ 
+                   application02()
                 }
             }
         }
@@ -129,6 +134,20 @@ def customFunction() {
     """  
 }
 
+def application02() {
+     sh """
+         docker run -itd -p ${params.PORT_ON_DOCKER_HOST_APP_2}:80  ${env.DOCKER_HUB_USERNAME}/${env.ALPHA_APPLICATION_02_REPO}:${params.APP2_TAG}
+         sleep 5
+         docker ps 
+    """ 
+}
+
+def sanity_check() {
+    if (params.BRANCH_NAME.isEmpty()){
+        echo "the parameter BRANCH_NAME is not set"
+        sh 'exit 2'
+    }
+}
 // pipeline {
 //     agent {
 //         label "master"
