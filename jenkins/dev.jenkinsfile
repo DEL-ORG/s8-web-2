@@ -101,9 +101,7 @@ pipeline {
         }
         stage('Building Application 01') {
             when {
-                expression { params.RUN_STAGES }
-
-                expression {
+              expression {
                     params.BRANCH_NAME == 's8elisa'
                 }
             }
