@@ -99,21 +99,21 @@ pipeline {
                 }
             }
         }
-        stage('Building Application 01') {
-            when {
-              expression {
-                    params.BRANCH_NAME == 's8elisa'
-                }
-            }
-            steps {
-                script {
-                    sh """
-                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi -f application-01.Dockerfile .
-                        docker images
-                    """
-                }
-            }
-        }
+        // stage('Building Application 01') {
+        //     when {
+        //         expression {
+        //             params.BRANCH_NAME == 's8elisa'
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             sh """
+        //                 docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi -f application-01.Dockerfile .
+        //                 docker images
+        //             """
+        //         }
+        //     }
+        // }
         stage('Building Application 02') {
             when {
                 expression {
@@ -162,37 +162,81 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi
                         docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-03:${BUILD_NUMBER}_ludi
                         docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
                     """
                 }
             }
         }
-        stage('Deployment') {
-            when {
-               expression {
-            params.BRANCH_NAME == 's8elisa'
-               }
-            }
+        // stage('Deployment') {
+        //     when {
+        //        expression {
+        //     params.BRANCH_NAME == 's8elisa'
+        //        }
+        //     }
+        //     steps {
+        //        script {
+        //     // Pull the latest version of your Docker images from Docker Hub
+        //     // sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
+        //     sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+        //     sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-03:${BUILD_NUMBER}_ludi"
+           
+        //     sh "docker run -itd --name ludi-test001 -p 7896:80 ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
+        //     sh "docker run -itd --name ludi-test002 -p 7897:80 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+        //     sh "docker run -itd --name ludi-test002 -p 7897:80 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
+        //     sh "docker ps  |grep ludi-test1"
+        //      sh "docker ps  |grep ludi-test2"
+        //         }
+        //     }
+        // }
+
+
+        stage('List Contents') {
             steps {
-               script {
-            // Pull the latest version of your Docker images from Docker Hub
-            sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
-            sh "docker pull ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
-            // Stop and remove existing containers (if any)
-            // sh "docker stop app-01 || true"
-            // sh "docker rm app-01 || true"
-            // sh "docker stop app-02 || true"
-            // sh "docker rm app-02 || true"
-            // Run new containers using the latest images
-            sh "docker run -itd --name ludi-test001 -p 7896:80 ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi"
-            sh "docker run -itd --name ludi-test002 -p 7897:80 ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi"
-            sh "docker ps  |grep ludi-test1"
-             sh "docker ps  |grep ludi-test2"
+                script {
+                    dir("${WORKSPACE}") {
+                    withCredentials([
+                        usernamePassword(credentialsId: 's8-test-docker-hub-auth', 
+                        usernameVariable: 'DOCKER_HUB_USERNAME', 
+                        passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                            docker.image("devopseasylearning/app-03":${BUILD_NUMBER}_ludi).inside('-u 0:0') {
+                                sh """
+                                    ls -l
+                                """
+                            }
+                        }
+                    }
                 }
             }
-        }
+        // }
+        // stage('Configure AWS CLI') {
+        //     steps {
+        //         script {
+        //             dir("${WORKSPACE}") {
+        //             withCredentials([
+        //                     [$class: 'AmazonWebServicesCredentialsBinding',
+        //                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        //                     credentialsId: "${env.AWS_CREADENTIALS_ID}",
+        //                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+
+        //                     usernamePassword(credentialsId: 'tia-dockehub-token', 
+        //                     usernameVariable: 'DOCKER_HUB_USERNAME', 
+        //                     passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+        //                         docker.image("devopseasylearning/jenkins-master-slave:latest").inside('-u 0:0') {
+        //                         sh """
+        //                             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+        //                             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+        //                             aws configure set default.region us-east-1
+
+        //                             aws s3 ls
+        //                         """
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Test timeout') {
             steps {
                 script {
