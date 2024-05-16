@@ -220,13 +220,13 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Test timeout') {
-            steps {
-                script {
-                    sleep 1
-                }
-            }
-        }
+        // stage('Test timeout') {
+        //     steps {
+        //         script {
+        //             sleep 1
+        //         }
+        //     }
+        // }
     }
 }
 
