@@ -1,4 +1,5 @@
 pipeline {
+
     agent {
         label "SERVER03"
     }
@@ -25,27 +26,12 @@ pipeline {
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
-        booleanParam(name: 'RUN_STAGES', defaultValue: false, description: 'Run stages')
-        booleanParam(name: 'DELETE_APPLICATION', defaultValue: false, description: 'Delete Application')
-        booleanParam(name: 'SKIP_STAGES', defaultValue: false, description: 'Skip stages building and pushing image')
+        // booleanParam(name: 'RUN_STAGES', defaultValue: false, description: 'Run stages')
+        // booleanParam(name: 'DELETE_APPLICATION', defaultValue: false, description: 'Delete Application')
+        // booleanParam(name: 'SKIP_STAGES', defaultValue: false, description: 'Skip stages building and pushing image')
     }
     stages {
-        // stage ('Check Allow Users') {
-        //     steps {
-        //         script {
-        //             wrap([$class: 'BuildUser']) {
-        //                 def build_id = env.BUILD_USER_ID
-        //                 def build_user = env.BUILD_USER
-        //                 echo "build_id : $build_id"
-        //                 if (build_id in ['corneillechahoua', 'admin']) {
-        //                     echo "Hi $build_user, You are allowed to run this job"
-        //                 } else {
-        //                     error "Hi $build_user, You are not allowed to run this job"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+
         stage('Sanity Check') {
             steps {
                 script {
@@ -56,8 +42,6 @@ pipeline {
         stage('Clone Repository') {
             when {
                 expression {
-                expression { params.RUN_STAGES }
-
                 params.BRANCH_NAME == 's8elisa'
                 }
             }
@@ -99,21 +83,21 @@ pipeline {
                 }
             }
         }
-        // stage('Building Application 01') {
-        //     when {
-        //         expression {
-        //             params.BRANCH_NAME == 's8elisa'
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             sh """
-        //                 docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi -f application-01.Dockerfile .
-        //                 docker images
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Building Application 01') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 's8elisa'
+                }
+            }
+            steps {
+                script {
+                    sh """
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi -f application-01.Dockerfile .
+                        docker images
+                    """
+                }
+            }
+        }
         stage('Building Application 02') {
             when {
                 expression {
@@ -162,6 +146,7 @@ pipeline {
             steps {
                 script {
                     sh """
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}_ludi
                         docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}_ludi
                         docker push ${env.DOCKER_HUB_USERNAME}/app-03:${BUILD_NUMBER}_ludi
                         docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
@@ -190,25 +175,23 @@ pipeline {
         //         }
         //     }
         // }
-
-
-        stage('List Contents') {
-            steps {
-                script {
-                    dir("${WORKSPACE}") {
-                    withCredentials([
-                        usernamePassword(credentialsId: 's8-test-docker-hub-auth', 
-                        usernameVariable: 'DOCKER_HUB_USERNAME', 
-                        passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                            docker.image("devopseasylearning/app-03":${BUILD_NUMBER}_ludi).inside('-u 0:0') {
-                                sh """
-                                    ls -l
-                                """
-                            }
-                        }
-                    }
-                }
-            }
+        // stage('List Contents') {
+        //     steps {
+        //         script {
+        //             dir("${WORKSPACE}") {
+        //             withCredentials([
+        //                 usernamePassword(credentialsId: 's8-test-docker-hub-auth', 
+        //                 usernameVariable: 'DOCKER_HUB_USERNAME', 
+        //                 passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+        //                     docker.image("devopseasylearning/app-03":${BUILD_NUMBER}_ludi).inside('-u 0:0') {
+        //                         sh """
+        //                             ls -l
+        //                         """
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
         // }
         // stage('Configure AWS CLI') {
         //     steps {
