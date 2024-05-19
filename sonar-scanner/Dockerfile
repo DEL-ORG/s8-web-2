@@ -5,7 +5,7 @@ FROM openjdk:11-slim
 ENV SONAR_SCANNER_VERSION=5.0.1.3006
 ENV SONAR_SCANNER_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip
 
-# Install required tools (curl, unzip)
+# Install required tools 
 RUN apt-get update && \
     apt-get install -y curl unzip && \
     rm -rf /var/lib/apt/lists/*
