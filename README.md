@@ -161,7 +161,7 @@ logging:
 [Click here to visit our website](https://www.devopseasylearning.com/)
 
 ![alt text](image.png)
-
+![alt text](application-01/img/logo-backup.png)
 ```groovy
 pipeline {
     agent any
