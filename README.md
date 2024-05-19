@@ -45,3 +45,9 @@ Love**is**bold
 | Jessica    | 28  | Project Manager  | 
 
 
+| Item                | Quantity | Price (USD) |
+|---------------------|---------:|------------:|
+| Laptop              |        2 |      1000   |
+| Smartphone          |        3 |       500   |
+| Headphones          |        5 |        50   |
+| External Hard Drive |        1 |       150   |
