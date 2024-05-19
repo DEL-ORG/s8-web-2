@@ -1,5 +1,5 @@
 FROM httpd
-LABEL maintainer="ektech"
+LABEL maintainer="DEL"
 ARG port=80
 USER root
 RUN apt -y update 
