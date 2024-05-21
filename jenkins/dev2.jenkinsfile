@@ -20,8 +20,8 @@ pipeline {
     }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'a1danniella', description: '')
-        string(name: 'APP1_TAG', defaultValue: '', description: '')
-        string(name: 'APP2_TAG', defaultValue: '', description: '')
+        string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
+        string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     // stages {
@@ -66,7 +66,7 @@ pipeline {
             }
             steps {
                 script {
-                    git credentialsId: 'a1dannie-github-credentiel',
+                    git credentialsId: 'tia-ssh-github-auth-private-key',
                         url: 'git@github.com:DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
                 }
