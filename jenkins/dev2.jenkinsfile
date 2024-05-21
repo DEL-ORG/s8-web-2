@@ -193,7 +193,7 @@ pipeline {
                 }
             }
         }
-    }
+        
     post {
         success {
             slackSend color: '#2EB67D',
@@ -229,6 +229,7 @@ pipeline {
         }   
     }
 }
+
 
 def pushDockerhub() {
     sh """
