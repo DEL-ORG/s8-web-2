@@ -33,7 +33,7 @@ pipeline {
                         def build_id = env.BUILD_USER_ID     // this stage is a security measure that will allow only a specifique user to build the job. 
                         def build_user = env.BUILD_USER
                         echo "build_id : $build_id"
-                        if (build_id in ['a1danniella', 'admin']) {
+                        if (build_id in ['s6student', 'admin']) {
                             echo "Hi $build_user, You are allowed to run this job"
                         } else {
                             error "Hi $build_user, You are not allowed to run this job"
