@@ -13,7 +13,7 @@ pipeline {
         // retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
     }
     environment {
-        DOCKER_HUB_USERNAME="a1danniellaopseasylearning"
+        DOCKER_HUB_USERNAME="devopseasylearning"
         ALPHA_APPLICATION_01_REPO="alpha-application-01"
         ALPHA_APPLICATION_02_REPO="alpha-application-02"
         DOCKER_CREDENTIAL_ID = 's8-test-docker-hub-auth'
