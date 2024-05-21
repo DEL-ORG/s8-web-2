@@ -79,7 +79,7 @@ pipeline {
             steps {
                 script {
                     dir("${WORKSPACE}") {
-                        docker.image("devopseasylearning/a1danie-sonar-scanner:latest").inside('-u 0:0') {
+                        docker.image("devopseasylearning/a1dannie-sonar-scanner:latest").inside('-u 0:0') {
                             withSonarQubeEnv('SonarScanner') {
                                 sh """
                                     ls -l 
