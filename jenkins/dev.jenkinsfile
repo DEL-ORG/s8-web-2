@@ -57,7 +57,7 @@ pipeline {
             }
             steps {
                 script {
-                    git credentialsId: 'a1dannie-github-credentiel',
+                    git credentialsId: 'tia-ssh-github-auth-private-key',
                         url: 'https://github.com/DEL-ORG/s8-web-2.git',
                         branch: "${params.BRANCH_NAME}"
                 }
