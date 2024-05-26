@@ -24,6 +24,6 @@ RUN sonar-scanner -v
 
 # Define a work directory
 WORKDIR /app
-
+XXXXXXXXX
 
 # https://chat.openai.com/c/8e7c24da-0fff-4e07-b834-79535b5e80e3
