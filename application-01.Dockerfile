@@ -11,7 +11,8 @@ COPY ./application-01-TIA .
 EXPOSE 80
 
 # Start Apache when the container starts
-CMD ["apache2ctl", "-D", "FOREGROUND"]-TIA
+CMD ["apache2ctl", "-D", "FOREGROUND"] - Giress
+
 
 
 
