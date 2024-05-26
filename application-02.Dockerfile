@@ -9,7 +9,7 @@ COPY ./application-02 .
 
 # Expose port 80 to allow external access to the web server
 EXPOSE 80
-
+.....sffasfasf
 # Start Apache when the container starts
 CMD ["apache2ctl", "-D", "FOREGROUND"]
 
