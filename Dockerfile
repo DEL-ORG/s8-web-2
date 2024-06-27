@@ -1,6 +1,6 @@
 FROM ubuntu
 RUN apt update
-RUN apt install apche2 -y
+RUN apt install apache2 -y
 
 WORKDIR /var/www/html
 
