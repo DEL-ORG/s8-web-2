@@ -6,7 +6,7 @@ services:
     hostname: ver1
     image: devopseasylearning/tarzan-ui:v0.0.1
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - AUTH_HOST=auth
       - WEATHER_HOST=weather
