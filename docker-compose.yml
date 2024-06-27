@@ -1,126 +1,97 @@
- version: '3.3'
- services:
-  yelb-ui:
-    image: mreferre/yelb-ui:0.7
-    ports: 
-     - 10000:80
-    networks:
-     - valdes
-    depends_on:
-     - yelb-appserver
-  yelb-appserver:
-    image: mreferre/yelb-appserver:0.5
-    networks:
-     - valdes
-    depends_on:
-     - redis-server
-     - yelb-db 
-  yelb-db:
-    image: mreferre/yelb-db:0.5
-    networks:
-     - valdes
-    volumes:
-     - val:/var/lib/postgresql/data
-  odilia-db-replication01:
-    image: mreferre/yelb-db:0.5
-    networks:
-     - valdes
-    volumes:
-     - val1:/var/lib/postgresql/data
-  odilia-db-replication02:
-    image: mreferre/yelb-db:0.5
-    networks:
-     - valdes
-    volumes:
-     - val2:/var/lib/postgresql/data
-  odilia-db-replication03:
-    image: mreferre/yelb-db:0.5
-    networks:
-     - valdes
-    volumes:
-     - val3:/var/lib/postgresql/data
-  redis-server:
-    image: redis:4.0.2
-    networks:
-     - valdes
-    volumes:
-     - redis:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
-  odilia-redis-01:
-    image: redis:4.0.2
-    networks:
-     - valdes
-    volumes:
-     - redis1:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
-  odilia-redis-02:
-    image: redis:4.0.2
-    networks:
-     - valdes
-    volumes:
-     - redis2:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
-  odilia-redis-sentinel01:
-    image: redis:4.0.2
-    networks:
-     - valdes
-    volumes:
-     - val4:/etc/redis/sentinel.conf
-    command: redis-sentinel /etc/redis/sentinel.conf
-    depends_on:
-     - redis-server
-     - odilia-redis-01 
-     - odilia-redis-02
-  odilia-redis-sentinel02:
-    image: redis:4.0.2
-    networks:
-     - valdes
-    volumes:
-     - val5:/etc/redis/sentinel.conf
-    command: redis-sentinel /etc/redis/sentinel.conf
-    depends_on:
-     - redis-server
-     - odilia-redis-01 
-     - odilia-redis-02
-  odilia-redis-sentinel03:
-    image: redis:4.0.2
-    networks:
-     - valdes
-    volumes:
-     - val6:/etc/redis/sentinel.conf
-    command: redis-sentinel /etc/redis/sentinel.conf
-    depends_on:
-     - redis-server
-     - odilia-redis-01 
-     - odilia-redis-02
+version: '3.3'
 
- networks:
+services:
+  petclinic:
+    build:
+      context: .
+      dockerfile: Dockerfile.multi
+   
+    environment:
+      - SERVER_PORT:8080
+      - MYSQL_URL:jdbc:mysql=//mysql/petclinic
+    volumes:
+      - data:/app
+    ports:
+      - 8001:8000
+      - 8081:8080
+    networks:
+      - valdes 
+    depends_on:
+      - redis-0
+      - mysql  
+
+  mysql:
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_USER=petclinic
+      - MYSQL_PASSWORD=petclinic
+      - MYSQL_DATABASE=petclinic
+    volumes:
+      - mysql_config:/etc/mysql/conf.d
+    networks:
+      - valdes
+
+
+  redis-0:
+    image: redis:4.0.2
+    volumes:
+      - redis-0:/etc/redis/redis.conf
+    networks:
+      - valdes 
+    depends_on:
+      - sentinel-01   
+
+  redis-1:
+    image: redis:4.0.2
+    volumes:
+      - redis-1:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - valdes 
+
+  redis-2:
+    image: redis:4.0.2
+    volumes:
+      - redis-2:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - valdes 
+
+  sentinel-01:
+    image: redis:4.0.2
+    volumes:
+      - sentinel-01:/etc/redis/sentinel.conf
+    networks:
+      - valdes   
+
+  sentinel-02:
+    image: redis:4.0.2
+    volumes:
+      - sentinel-02:/etc/redis/sentinel.conf 
+    command: redis-sentinel /etc/redis/sentinel.conf
+    networks:
+      - valdes 
+
+  sentinel-03:
+    image: redis:4.0.2
+    volumes:
+      - sentinel-03:/etc/redis/sentinel.conf
+    command: redis-sentinel /etc/redis/sentinel.conf
+    networks:
+      - valdes
+
+volumes:
+  data:
+  mysql_config:
+  redis-0:
+  redis-1:
+  redis-2:
+  sentinel-01:
+  sentinel-02:
+  sentinel-03:
+
+networks:
   valdes:
-    driver: bridge 
-
-
-
-
-
- volumes:
-  val6:
-    driver: local
-  val5:
-    driver: local
-  val4:
-    driver: local
-  redis1:
-    driver: local
-  redis2:
-    driver: local
-  redis:
-    driver: local
-  val1:
-    driver: local
-  val2:
-    driver: local
-  val3:
-   driver: local
-  val:
-   driver: local
-
+     driver: bridge
