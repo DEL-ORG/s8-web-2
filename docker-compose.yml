@@ -1,97 +1,90 @@
-version: '3.3'
+version: '3'
 
 services:
-  petclinic:
-    build:
-      context: .
-      dockerfile: Dockerfile.multi
-   
-    environment:
-      - SERVER_PORT:8080
-      - MYSQL_URL:jdbc:mysql=//mysql/petclinic
-    volumes:
-      - data:/app
+  ui:
+    container_name: val1
+    hostname: ver1
+    image: devopseasylearning/tarzan-ui:v0.0.1
     ports:
-      - 8001:8000
-      - 8081:8080
-    networks:
-      - valdes 
-    depends_on:
-      - redis-0
-      - mysql  
-
-  mysql:
-    image: mysql:8
+      - "3000:3000"
     environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_USER=petclinic
-      - MYSQL_PASSWORD=petclinic
-      - MYSQL_DATABASE=petclinic
-    volumes:
-      - mysql_config:/etc/mysql/conf.d
-    networks:
-      - valdes
-
-
-  redis-0:
-    image: redis:4.0.2
-    volumes:
-      - redis-0:/etc/redis/redis.conf
-    networks:
-      - valdes 
+      - AUTH_HOST=auth
+      - WEATHER_HOST=weather
+      - AUTH_PORT=8080
+      - WEATHER_PORT=5000
+      - REDIS_USER=redis
+      - REDIS_PASSWORD=redis
     depends_on:
-      - sentinel-01   
-
-  redis-1:
-    image: redis:4.0.2
-    volumes:
-      - redis-1:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
-    networks:
-      - valdes 
-
-  redis-2:
-    image: redis:4.0.2
-    volumes:
-      - redis-2:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
-    networks:
-      - valdes 
-
-  sentinel-01:
-    image: redis:4.0.2
-    volumes:
-      - sentinel-01:/etc/redis/sentinel.conf
-    networks:
-      - valdes   
-
-  sentinel-02:
-    image: redis:4.0.2
-    volumes:
-      - sentinel-02:/etc/redis/sentinel.conf 
-    command: redis-sentinel /etc/redis/sentinel.conf
-    networks:
-      - valdes 
-
-  sentinel-03:
-    image: redis:4.0.2
-    volumes:
-      - sentinel-03:/etc/redis/sentinel.conf
-    command: redis-sentinel /etc/redis/sentinel.conf
+      - auth
+      
     networks:
       - valdes
+    restart: always
+
+  auth:
+    container_name: val2
+    hostname: ver2
+    image: devopseasylearning/tarzan-auth:v0.0.1
+    expose: 
+      - "8080" 
+    ports:
+      - 8003:8080
+    environment:
+      
+      - DB_HOST=db
+      - DB_PASSWORD=my-secret-pw
+    depends_on:
+      - db  # Adding db as a direct dependency
+    networks:
+      - valdes
+    restart: always
+
+  weather:
+    container_name: val3
+    hostname: ver3
+    image: devopseasylearning/tarzan-weather:v0.0.1
+    ports:
+      - "5050:5000"
+    environment:
+      - APIKEY=ecbc396f46mshb65cbb1f82cf334p1fcc87jsna5e962a3c542
+      - REDIS_URL=redis://my_redis:6379/0
+    depends_on:
+      - db
+      - redis
+   
+    networks:
+      - valdes
+    restart: always
+
+  db:
+    container_name: val4
+    hostname: ver4
+    image: devopseasylearning/tarzan-db:v0.0.1
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+    volumes:
+      - val1:/var/lib/mysql
+    networks:
+      - valdes
+    restart: always
+
+  redis:
+    container_name: val5
+    hostname: ver5
+    image: redis
+    environment:
+      - REDIS_USER=redis
+      - REDIS_PASSWORD=redis
+    volumes:
+      - val2:/data
+    networks:
+      - valdes
+    restart: always
 
 volumes:
-  data:
-  mysql_config:
-  redis-0:
-  redis-1:
-  redis-2:
-  sentinel-01:
-  sentinel-02:
-  sentinel-03:
+  val1:
+  val2:
 
 networks:
   valdes:
-     driver: bridge
+    driver: bridge
