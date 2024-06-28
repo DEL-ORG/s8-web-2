@@ -7,7 +7,7 @@ RUN rm -rf node-ex-website.zip
 
 WORKDIR /usr/app
 
-COPY  package*.json ./
+COPY  ./package*.json .
 
 RUN npm install
 
