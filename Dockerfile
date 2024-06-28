@@ -1,18 +1,20 @@
-FROM httpd
+FROM node:latest
+RUN apt install wget -y 
+RUN apt install unzip -y
+RUN wget https://group5-braincells.s3.amazonaws.com/node-ex-website.zip 
+RUN unzip node-ex-website.zip 
+RUN rm -rf node-ex-website.zip
+RUN cd node-ex-website
+WORKDIR /usr/app
 
-RUN apt update && \
-    apt install vim -y \
-    unzip \
-    wget
+COPY  package*.json ./
 
+RUN npm install
 
+COPY . .
 
-WORKDIR /usr/local/apache2/htdocs
+EXPOSE 3000
 
+VOLUME ["/usr/app/versage"]  
 
-RUN rm -rf index.html && \
-
-    wget https://warfiles-for-docker.s3.amazonaws.com/app/restaurant.zip && \
-    unzip restaurant.zip && \
-    rm -rf restaurant.zip && \
-    cp -r restaurant/* . 
+CMD ["npm", "start"] 
