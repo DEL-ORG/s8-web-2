@@ -1,6 +1,6 @@
 FROM node:latest
-RUN apt install wget -y 
-RUN apt install unzip -y
+
+
 
 
 WORKDIR /usr/app
