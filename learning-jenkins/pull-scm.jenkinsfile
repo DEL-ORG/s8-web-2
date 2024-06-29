@@ -26,7 +26,7 @@ pipeline {
                 script {
                     sh """
                         echo "Cloning the repository ...................."
-                        sleep 5
+                        sleep 1
                         ls
                     """
                 }
