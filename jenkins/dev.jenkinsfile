@@ -36,8 +36,8 @@ pipeline {
             steps {
                 script {
                     // Attempt to change permissions of the workspace files
-                    sh 'sudo chmod -R 777 ${WORKSPACE}'
-                    sh 'sudo chown -R $(whoami):$(whoami) ${WORKSPACE}'
+                    sh 'chmod -R 777 ${WORKSPACE} || true'
+                    sh 'chown -R $(whoami):$(whoami) ${WORKSPACE} || true'
                 }
             }
         }
