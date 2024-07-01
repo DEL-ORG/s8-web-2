@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {label 'SERVER03'}
     
     triggers {
         githubPush()
