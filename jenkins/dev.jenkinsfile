@@ -35,9 +35,11 @@ pipeline {
         stage('Prepare Workspace') {
             steps {
                 script {
-                    // Attempt to change permissions of the workspace files
-                    sh 'chmod -R 777 ${WORKSPACE} || true'
-                    sh 'chown -R $(whoami):$(whoami) ${WORKSPACE} || true'
+                    // Run permission changes inside a Docker container
+                    docker.image('alpine').inside {
+                        sh 'chmod -R 777 ${WORKSPACE} || true'
+                        sh 'chown -R $(whoami):$(whoami) ${WORKSPACE} || true'
+                    }
                 }
             }
         }
