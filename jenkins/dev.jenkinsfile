@@ -34,8 +34,7 @@ pipeline {
         stage('Clear SonarQube Cache') {
             steps {
                 script {
-                    // Delete contents of SonarQube cache directory
-                    sh "rm -rf /root/.sonar/cache/*"
+                    sh "sudo rm -rf /root/.sonar/cache/*"
                     echo "SonarQube cache cleared."
                 }
             }
