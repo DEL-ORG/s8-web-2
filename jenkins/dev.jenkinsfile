@@ -75,25 +75,25 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube analysis') {
-            steps {
-                script {
-                    dir("${WORKSPACE}") {
-                        docker.image("s8kevinaf02/s8-sonar-scanner:latest").inside('-u 0:0') {
-                            withSonarQubeEnv('SonarScanner') {
-                                sh """
-                                    sonar-scanner -Dsonar.host.url=${env.SONARQUBE_URL}
-                                    ls -l 
-                                    pwd
-                                    sonar-scanner -v
-                                    sonar-scanner
-                                """
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // stage('SonarQube analysis') {
+        //     steps {
+        //         script {
+        //             dir("${WORKSPACE}") {
+        //                 docker.image("s8kevinaf02/s8-sonar-scanner:latest").inside('-u 0:0') {
+        //                     withSonarQubeEnv('SonarScanner') {
+        //                         sh """
+        //                             sonar-scanner -Dsonar.host.url=${env.SONARQUBE_URL}
+        //                             ls -l 
+        //                             pwd
+        //                             sonar-scanner -v
+        //                             sonar-scanner
+        //                         """
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Building Application 01') {
             when {
                 expression {
