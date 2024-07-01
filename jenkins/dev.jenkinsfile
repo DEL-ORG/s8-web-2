@@ -9,7 +9,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '3')) // Discard old builds to save disk space
         disableConcurrentBuilds() // Ensures that only one build can run at a time
         timestamps() // Adds timestamps to the console output
-        skipDefaultCheckout() // Skips the default checkout of source code
+        skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
         //retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
     }
     environment {
@@ -25,21 +25,26 @@ pipeline {
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
     stages {
+        // stage ('Check Allow Users') {
+        //     steps {
+        //         script {
+        //             wrap([$class: 'BuildUser']) {
+        //                 def build_id = env.BUILD_USER_ID
+        //                 def build_user = env.BUILD_USER
+        //                 echo "build_id : $build_id"
+        //                 if (build_id in ['s8kevinaf02', 'admin']) {
+        //                     echo "Hi $build_user, You are allowed to run this job"
+        //                 } else {
+        //                     error "Hi $build_user, You are not allowed to run this job"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Sanity Check') {
             steps {
                 script {
                     sanity_check()
-                }
-            }
-        }
-        stage('Prepare Workspace') {
-            steps {
-                script {
-                    // Run permission changes inside a Docker container
-                    docker.image('alpine').inside {
-                        sh 'chmod -R 777 ${WORKSPACE} || true'
-                        sh 'chown -R $(whoami):$(whoami) ${WORKSPACE} || true'
-                    }
                 }
             }
         }
@@ -57,85 +62,91 @@ pipeline {
                 }
             }
         }
-        stage('Build and Analyze') {
-            parallel {
-                stage('Building Sonar Image') {
-                    steps {
-                        script {
-                            dir("${WORKSPACE}/sonar-scanner") {
-                                sh """
-                                docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
-                                docker images
-                                """
-                            }
-                        }
-                    }
-                }
-                stage('SonarQube analysis') {
-                    steps {
-                        script {
-                            dir("${WORKSPACE}") {
-                                docker.image("s8kevinaf02/s8-sonar-scanner:latest").inside('-u 0:0') {
-                                    withSonarQubeEnv('SonarScanner') {
-                                        sh """
-                                            ls -l 
-                                            pwd
-                                            sonar-scanner -v
-                                            sonar-scanner
-                                        """
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Build Applications') {
-            when {
-                expression {
-                    params.BRANCH_NAME == 's8kevinaf02'
-                }
-            }
-            parallel {
-                stage('Building Application 01') {
-                    steps {
-                        script {
-                            sh """
-                                docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
-                                docker images
-                            """
-                        }
-                    }
-                }
-                stage('Building Application 02') {
-                    steps {
-                        script {
-                            sh """
-                                docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
-                                docker images
-                            """
-                        }
-                    }
-                }
-            }
-        }
-        stage('Login and Push to Docker Hub') {
+        stage('Building Sonar Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", 
-                    usernameVariable: 'DOCKER_USERNAME', 
-                    passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    dir("${WORKSPACE}/sonar-scanner") {
                         sh """
-                            docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
-                            docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
-                            docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest  .
+                        docker images
                         """
                     }
                 }
             }
         }
+        stage('SonarQube analysis') {
+            steps {
+                script {
+                    dir("${WORKSPACE}") {
+                        docker.image("s8kevinaf02/s8-sonar-scanner:latest").inside('-u 0:0') {
+                            withSonarQubeEnv('SonarScanner') {
+                                sh """
+                                    ls -l 
+                                    pwd
+                                    sonar-scanner -v
+                                    sonar-scanner
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Building Application 01') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 's8kevinaf02'
+                }
+            }
+            steps {
+                script {
+                    sh """
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER} -f application-01.Dockerfile .
+                        docker images
+                    """
+                }
+            }
+        }
+        stage('Building Application 02') {
+            when {
+                expression {
+                    params.BRANCH_NAME == 's8kevinaf02'
+                }
+            }
+            steps {
+                script {
+                    sh """
+                        docker build -t ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER} -f application-02.Dockerfile .
+                        docker images
+                    """
+                }
+            }
+        }
+        stage('Login into') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL_ID}", 
+                    usernameVariable: 'DOCKER_USERNAME', 
+                    passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Use Docker CLI to login
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    }
+                }
+            }
+        }
+        stage('Pushing into Docker Hub') {
+            steps {
+                script {
+                    sh """
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-01:${BUILD_NUMBER}
+                        docker push ${env.DOCKER_HUB_USERNAME}/app-02:${BUILD_NUMBER}
+                        docker push ${env.DOCKER_HUB_USERNAME}/s8-sonar-scanner:latest
+                    """
+                }
+            }
+        }
+            
         stage('Test timeout') {
             steps {
                 script {
@@ -153,6 +164,7 @@ def customFunction() {
         uptime
     """
 }
+
 
 def sanity_check() {
     if (params.BRANCH_NAME.isEmpty()){
