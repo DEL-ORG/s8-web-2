@@ -29,17 +29,6 @@ pipeline {
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
-    
-    stages {
-        stage('Clear SonarQube Cache') {
-            steps {
-                script {
-                    sh "sudo rm -rf /root/.sonar/cache/*"
-                    echo "SonarQube cache cleared."
-                }
-            }
-        }
-        
         stage('Sanity Check') {
             steps {
                 script {
