@@ -1,9 +1,12 @@
 pipeline {
-    agent {label 'SERVER03'}
+    agent {
+        label 'SERVER03'
+    }
     
     triggers {
         githubPush()
     }
+    
     options {
         timeout(time: 1, unit: 'MINUTES') // Timeout for the entire pipeline
         buildDiscarder(logRotator(numToKeepStr: '3')) // Discard old builds to save disk space
@@ -12,35 +15,32 @@ pipeline {
         skipDefaultCheckout() // Skips the default checkout of source code, useful if you're doing a custom checkout
         //retry(3) // Automatically retries the entire pipeline up to 3 times if it fails
     }
+    
     environment {
         DOCKER_HUB_USERNAME="s8kevinaf02"
         ALPHA_APPLICATION_01_REPO="app-01-1"
         ALPHA_APPLICATION_02_REPO="app-02-2"
         DOCKER_CREDENTIAL_ID = 's8kevinaf02-dockerhub-token'
     }
+    
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 's8kevinaf02', description: '')
         string(name: 'APP1_TAG', defaultValue: 'latest', description: '')
         string(name: 'APP2_TAG', defaultValue: 'latest', description: '')
         string(name: 'PORT_ON_DOCKER_HOST', defaultValue: '', description: '')
     }
+    
     stages {
-        // stage ('Check Allow Users') {
-        //     steps {
-        //         script {
-        //             wrap([$class: 'BuildUser']) {
-        //                 def build_id = env.BUILD_USER_ID
-        //                 def build_user = env.BUILD_USER
-        //                 echo "build_id : $build_id"
-        //                 if (build_id in ['s8kevinaf02', 'admin']) {
-        //                     echo "Hi $build_user, You are allowed to run this job"
-        //                 } else {
-        //                     error "Hi $build_user, You are not allowed to run this job"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Clear SonarQube Cache') {
+            steps {
+                script {
+                    // Delete contents of SonarQube cache directory
+                    sh "rm -rf /root/.sonar/cache/*"
+                    echo "SonarQube cache cleared."
+                }
+            }
+        }
+        
         stage('Sanity Check') {
             steps {
                 script {
@@ -48,6 +48,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Clone Repository') {
             when {
                 expression {
@@ -62,6 +63,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Building Sonar Image') {
             steps {
                 script {
@@ -74,6 +76,7 @@ pipeline {
                 }
             }
         }
+        
         stage('SonarQube analysis') {
             steps {
                 script {
@@ -92,6 +95,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Building Application 01') {
             when {
                 expression {
@@ -107,6 +111,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Building Application 02') {
             when {
                 expression {
@@ -122,7 +127,8 @@ pipeline {
                 }
             }
         }
-        stage('Login into') {
+        
+        stage('Login into Docker Hub') {
             steps {
                 script {
                     // Login to Docker Hub
@@ -135,6 +141,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Pushing into Docker Hub') {
             steps {
                 script {
@@ -146,7 +153,7 @@ pipeline {
                 }
             }
         }
-            
+        
         stage('Test timeout') {
             steps {
                 script {
@@ -165,9 +172,8 @@ def customFunction() {
     """
 }
 
-
 def sanity_check() {
-    if (params.BRANCH_NAME.isEmpty()){
+    if (params.BRANCH_NAME.isEmpty()) {
        echo "The parameter BRANCH_NAME is not set"
        sh 'exit 2'
    } 
